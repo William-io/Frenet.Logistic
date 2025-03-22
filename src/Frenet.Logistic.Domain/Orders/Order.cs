@@ -1,42 +1,99 @@
 using Frenet.Logistic.Domain.Abstractions;
+using Frenet.Logistic.Domain.Dispatchs;
+using Frenet.Logistic.Domain.Orders.Events;
 
 namespace Frenet.Logistic.Domain.Orders;
 
 public sealed class Order : Entity
 {
-    private Order(
+    public Order(
         Guid id, 
-        Guid dispatchId, 
-        Guid customerId, 
-        string origin,
-        string destination,
+        Guid dispatchId,
+        Guid customerId,
+        ZipCode zipCode,
+        OrderStatus status,
         DateTime createdOnUtc,
-        OrderStatus status)
+        string? shippingName = null,
+        string? shippingPrice = null)
         : base(id)
     {
         DispatchId = dispatchId;
         CustomerId = customerId;
-        Origin = origin;
-        Destination = destination;
-        CreatedOnUtc = createdOnUtc;
+        ZipCode = zipCode;
         Status = status;
+        CreatedOnUtc = createdOnUtc;
+        ShippingName = shippingName;
+        ShippingPrice = shippingPrice;
     }
-
     public Guid DispatchId { get; private set; }
     public Guid CustomerId { get; private set; }
-    public string Origin { get; private set; }
-    public string Destination { get; private set; }
+    public ZipCode ZipCode { get; private set; }
     
     public DateTime CreatedOnUtc { get; private set; }
+    public DateTime ProcessingOnUtc { get; private set; }
+    public DateTime ShippedOnUtc { get; private set; }
+    public DateTime DeliveredOnUtc { get; private set; }
+    public DateTime CancelledOnUtc { get; private set; }
+    
     public OrderStatus Status { get; private set; }
     
-    // public static Order Ordering(
-    //     Guid dispatchId, 
-    //     Guid customerId, 
-    //     string origin, 
-    //     string destination,
-    //     DateTime utcNow)
-    // {
-    //     
-    // }
+    public string? ShippingName { get; private set; }
+    public string? ShippingPrice { get; private set; }
+    
+    public static Order ProcessOrder(
+        Dispatch dispatch,
+        Guid customerId, 
+        ZipCode zipCode,
+        DateTime utcNow,
+        ShippingPriceService shippingPriceService)
+    {
+        Task<ShippingPriceDetails> shippingPriceDetails = shippingPriceService.CalcularFrete(dispatch, zipCode);
+        var ordering = new Order(
+            Guid.NewGuid(),
+            dispatch.Id,
+            customerId,
+            zipCode,
+            OrderStatus.Processing,
+            utcNow,
+            shippingPriceDetails.Result.Name,
+            shippingPriceDetails.Result.Price);
+
+        ordering.AddDomainEvent(new OrderingProcessingDomainEvent(ordering.Id));
+        
+        return ordering;
+    }
+    
+    public Result Confirm(DateTime utcNow)
+    {
+        if (Status != OrderStatus.Processing)
+        {
+            return Result.Failure(OrderErros.NotProcessing);
+        }
+
+        //Caso contrario foi enviado
+        Status = OrderStatus.Shipped;
+        ShippedOnUtc = utcNow;
+
+        AddDomainEvent(new OrderShippedDomainEvent(Id));
+
+        return Result.Success();
+    }
+    
+    public Result Complete(DateTime utcNow)
+    {
+        if (Status != OrderStatus.Processing)
+        {
+            return Result.Failure(OrderErros.NotProcessing);
+        }
+
+        Status = OrderStatus.Delivered;
+        DeliveredOnUtc = utcNow;
+
+        AddDomainEvent(new OrderDeliveredDomainEvent(Id));
+
+        return Result.Success();
+    }
+    
+    //Processamento falta implementar
+
 }

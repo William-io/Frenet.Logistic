@@ -1,3 +1,5 @@
+using Frenet.Logistic.Domain.Customers;
+
 namespace Frenet.Logistic.Domain.Cursomers;
 
 public interface IUserRepository

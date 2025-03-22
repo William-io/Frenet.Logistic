@@ -1,8 +1,8 @@
 using Frenet.Logistic.Domain.Abstractions;
-using Frenet.Logistic.Domain.Dispatchs;
-using Frenet.Logistic.Domain.Cursomers.Events;
+using Frenet.Logistic.Domain.Cursomers;
+using Frenet.Logistic.Domain.Customers.Events;
 
-namespace Frenet.Logistic.Domain.Cursomers;
+namespace Frenet.Logistic.Domain.Customers;
 
 public sealed class Customer : Entity
 {

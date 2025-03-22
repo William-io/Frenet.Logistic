@@ -1,3 +1,3 @@
-namespace Frenet.Logistic.Domain.Cursomers;
+namespace Frenet.Logistic.Domain.Customers;
 
 public record LastName(string Value);

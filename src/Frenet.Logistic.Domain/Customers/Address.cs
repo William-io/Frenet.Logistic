@@ -1,4 +1,4 @@
-namespace Frenet.Logistic.Domain.Dispatchs;
+namespace Frenet.Logistic.Domain.Customers;
 
 public record Address(
     string Country,
