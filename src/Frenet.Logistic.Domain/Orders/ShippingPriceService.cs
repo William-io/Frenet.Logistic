@@ -60,7 +60,11 @@ public class ShippingPriceService
                 {
                     //teste
                     Console.WriteLine("Company Name: {0} - Price: {1}", company.Name, company.Price);
-                    return company;
+                    return new ShippingPriceDetails(company.Id, company.Name, company.Price);
+                }
+                else
+                {
+                    throw new ApplicationException("Não foi possível encontrar os detalhes de envio para a companhia especificada.");
                 }
     
             }
@@ -71,6 +75,6 @@ public class ShippingPriceService
         }
 
         Console.WriteLine("{0}", response);
-        return new ShippingPriceDetails(1, "Correios", "10.0m");
+        throw new ApplicationException("A resposta não foi bem-sucedida ou o conteúdo está vazio.");
     }
 }

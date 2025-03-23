@@ -9,7 +9,7 @@ public class Dispatch : Entity
         PackageParams = packageParams;
     }
 
-    public DateTime? LastDispatchOnUtc { get; private set; }
+    public DateTime? LastDispatchOnUtc { get; internal set; }
     public Package PackageParams { get; private set; }
 
 }

@@ -60,15 +60,15 @@ public sealed class Order : Entity
 
         ordering.AddDomainEvent(new OrderingProcessingDomainEvent(ordering.Id));
         
+        dispatch.LastDispatchOnUtc = utcNow;
+        
         return ordering;
     }
     
     public Result Confirm(DateTime utcNow)
     {
         if (Status != OrderStatus.Processing)
-        {
             return Result.Failure(OrderErros.NotProcessing);
-        }
 
         //Caso contrario foi enviado
         Status = OrderStatus.Shipped;
@@ -78,14 +78,12 @@ public sealed class Order : Entity
 
         return Result.Success();
     }
-    
+
     public Result Complete(DateTime utcNow)
     {
-        if (Status != OrderStatus.Processing)
-        {
-            return Result.Failure(OrderErros.NotProcessing);
-        }
-
+        if (Status != OrderStatus.Shipped)
+            return Result.Failure(OrderErros.NotShipped);
+        
         Status = OrderStatus.Delivered;
         DeliveredOnUtc = utcNow;
 
@@ -94,6 +92,21 @@ public sealed class Order : Entity
         return Result.Success();
     }
     
-    //Processamento falta implementar
+    public Result Cancel(DateTime utcNow)
+    {
+        if (Status != OrderStatus.Processing)
+            return Result.Failure(OrderErros.NotProcessing);
+        
+        var currentDate = DateOnly.FromDateTime(utcNow);
 
+        if (currentDate > DateOnly.FromDateTime(CreatedOnUtc).AddDays(7))
+            return Result.Failure(OrderErros.AlShipped);
+        
+        Status = OrderStatus.Cancelled;
+        CancelledOnUtc = utcNow;
+        
+        AddDomainEvent(new OrderCancelledDomainEvent(Id));
+        
+       return Result.Success();
+    }
 }

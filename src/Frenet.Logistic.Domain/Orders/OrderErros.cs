@@ -8,4 +8,12 @@ public static class OrderErros
         "Order.Processing",
         "Pedido não foi efetuado processamento!");
     
+    public static readonly Error NotShipped = new(
+        "Order.NotShipped",
+        "Pedido não foi enviado!");
+    
+    public static readonly Error AlShipped = new(
+        "Order.AlShipped",
+        "Pedido já foi enviado!");
+    
 }

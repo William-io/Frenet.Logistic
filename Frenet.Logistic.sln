@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "srs", "srs", "{02EA681E-C7D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Domain", "src\Frenet.Logistic.Domain\Frenet.Logistic.Domain.csproj", "{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Application", "src\Frenet.Logistic.Application\Frenet.Logistic.Application.csproj", "{97BD228D-8692-4945-BDEC-0C9FDACC1479}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +19,16 @@ Global
 		{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{97BD228D-8692-4945-BDEC-0C9FDACC1479} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 EndGlobal
