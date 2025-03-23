@@ -68,7 +68,7 @@ public sealed class Order : Entity
     public Result Confirm(DateTime utcNow)
     {
         if (Status != OrderStatus.Processing)
-            return Result.Failure(OrderErros.NotProcessing);
+            return Result.Failure(OrderErrors.NotProcessing);
 
         //Caso contrario foi enviado
         Status = OrderStatus.Shipped;
@@ -82,7 +82,7 @@ public sealed class Order : Entity
     public Result Complete(DateTime utcNow)
     {
         if (Status != OrderStatus.Shipped)
-            return Result.Failure(OrderErros.NotShipped);
+            return Result.Failure(OrderErrors.NotShipped);
         
         Status = OrderStatus.Delivered;
         DeliveredOnUtc = utcNow;
@@ -95,12 +95,12 @@ public sealed class Order : Entity
     public Result Cancel(DateTime utcNow)
     {
         if (Status != OrderStatus.Processing)
-            return Result.Failure(OrderErros.NotProcessing);
+            return Result.Failure(OrderErrors.NotProcessing);
         
         var currentDate = DateOnly.FromDateTime(utcNow);
 
         if (currentDate > DateOnly.FromDateTime(CreatedOnUtc).AddDays(7))
-            return Result.Failure(OrderErros.AlShipped);
+            return Result.Failure(OrderErrors.AlShipped);
         
         Status = OrderStatus.Cancelled;
         CancelledOnUtc = utcNow;

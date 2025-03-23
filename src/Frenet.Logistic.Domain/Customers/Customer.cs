@@ -1,5 +1,4 @@
 using Frenet.Logistic.Domain.Abstractions;
-using Frenet.Logistic.Domain.Cursomers;
 using Frenet.Logistic.Domain.Customers.Events;
 
 namespace Frenet.Logistic.Domain.Customers;

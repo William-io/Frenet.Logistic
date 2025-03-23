@@ -2,7 +2,7 @@ using Frenet.Logistic.Domain.Abstractions;
 
 namespace Frenet.Logistic.Domain.Orders;
 
-public static class OrderErros
+public static class OrderErrors
 {
     public static readonly Error NotProcessing = new(
         "Order.Processing",
@@ -15,5 +15,9 @@ public static class OrderErros
     public static readonly Error AlShipped = new(
         "Order.AlShipped",
         "Pedido já foi enviado!");
+    
+    public static readonly Error Overlap = new(
+        "Order.Overlap",
+        "O pedido atual está sobreposta a uma existente");
     
 }
