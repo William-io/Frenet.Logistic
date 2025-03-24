@@ -9,7 +9,7 @@ public sealed class OrderResponse
     
     public DateTime CreatedOnUtc { get; init; }
 
-    public string ShippingName { get; init; }
-    public string ShippingPrice { get; init; }
+    public string ShippingName { get; init; } = null!;
+    public string ShippingPrice { get; init; } = null!;
     
 }

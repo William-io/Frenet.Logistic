@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Domain", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Application", "src\Frenet.Logistic.Application\Frenet.Logistic.Application.csproj", "{97BD228D-8692-4945-BDEC-0C9FDACC1479}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Infrastructure", "src\Frenet.Logistic.Infrastructure\Frenet.Logistic.Infrastructure.csproj", "{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97BD228D-8692-4945-BDEC-0C9FDACC1479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,5 +36,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B0EEB024-5EA6-4BF6-9ECD-76DB60DF49BE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{97BD228D-8692-4945-BDEC-0C9FDACC1479} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C71DB0F1-2D46-4616-B3AF-103FCF954A4C}
 	EndGlobalSection
 EndGlobal
