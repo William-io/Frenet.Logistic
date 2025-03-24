@@ -19,5 +19,9 @@ public static class OrderErrors
     public static readonly Error Overlap = new(
         "Order.Overlap",
         "O pedido atual está sobreposta a uma existente");
-    
+
+    public static readonly Error NotFound = new(
+        "Order.Found",
+        "Pedido com o identificador especificado não foi encontrada");
+
 }
