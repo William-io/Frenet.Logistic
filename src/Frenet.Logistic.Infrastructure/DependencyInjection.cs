@@ -1,10 +1,13 @@
-﻿using Frenet.Logistic.Application.Abstractions.Clock;
+﻿using Dapper;
+using Frenet.Logistic.Application.Abstractions.Clock;
+using Frenet.Logistic.Application.Abstractions.DataFactory;
 using Frenet.Logistic.Application.Abstractions.Email;
 using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Customers;
 using Frenet.Logistic.Domain.Dispatchs;
 using Frenet.Logistic.Domain.Orders;
 using Frenet.Logistic.Infrastructure.Clock;
+using Frenet.Logistic.Infrastructure.Data;
 using Frenet.Logistic.Infrastructure.Email;
 using Frenet.Logistic.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +37,10 @@ public static class DependencyInjection
         services.AddScoped<IOrderRepository, OrderRepository>();
 
         services.AddScoped<IUnitOfWork>(ui => ui.GetRequiredService<Context>());
+
+        services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
+
+        SqlMapper.AddTypeHandler(new DateHandler());
 
         return services;
     }

@@ -1,5 +1,6 @@
 using Frenet.Logistic.Application.Abstractions.Clock;
 using Frenet.Logistic.Application.Abstractions.Messaging;
+using Frenet.Logistic.Application.Exceptions;
 using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Customers;
 using Frenet.Logistic.Domain.Dispatchs;
@@ -45,21 +46,30 @@ internal sealed class ProcessOrderCommandHandler : ICommandHandler<ProcessOrderC
         //from & to zip code
         var zipCode = new ZipCode(zipCodeDefault, customer.Address.ZipCode);
 
-        if (await _orderRepository.IsOverlappingAsync(dispatch, cancellationToken))
+        if (await _orderRepository.IsOverlappingAsync(dispatch!, cancellationToken))
             return Result.Failure<Guid>(OrderErrors.Overlap);
-        
-        var order = Order.ProcessOrder(
-            dispatch,
+
+        try
+        {
+            var order = Order.ProcessOrder(
+            dispatch!,
             customer.Id,
             zipCode,
             _dateTimeProvider.UtcNow,
             _shippingPriceService);
-            
-        _orderRepository.Add(order);
-        
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return order.Id;
+            _orderRepository.Add(order);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return order.Id;
+        }
+        catch (ConcurrencyException)
+        {
+            return Result.Failure<Guid>(OrderErrors.Overlap);
+
+        }
+        
 
     }
 }

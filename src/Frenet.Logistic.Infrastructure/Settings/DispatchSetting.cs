@@ -12,5 +12,8 @@ internal sealed class DispatchSetting : IEntityTypeConfiguration<Dispatch>
 
         builder.HasKey(dispatch => dispatch.Id);
         builder.OwnsOne(dispatch => dispatch.PackageParams);
+
+        builder.Property<uint>("Version").IsRowVersion();
+
     }
 }
