@@ -4,12 +4,14 @@ namespace Frenet.Logistic.Domain.Dispatchs;
 
 public class Dispatch : Entity
 {
-    public Dispatch(Guid id, Package packageParams) : base(id)
+    public Dispatch(Guid id, PackageParams packageParams) : base(id)
     {
-        PackageParams = packageParams;
+        Package = packageParams;
     }
 
+    private Dispatch() { }
+
     public DateTime? LastDispatchOnUtc { get; internal set; }
-    public Package PackageParams { get; private set; }
+    public PackageParams Package { get; private set; }
 
 }

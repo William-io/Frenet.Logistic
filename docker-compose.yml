@@ -1,0 +1,6 @@
+services:
+  frenet.logistic.api:
+    image: ${DOCKER_REGISTRY-}frenetlogisticapi
+    build:
+      context: .
+      dockerfile: src/Frenet.Logistic.API/Dockerfile

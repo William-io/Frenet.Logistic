@@ -5,7 +5,7 @@ namespace Frenet.Logistic.Domain.Customers;
 
 public sealed class Customer : Entity
 {
-    public Customer(
+    private Customer(
         Guid id,
         FirstName firstName,
         LastName lastName,
@@ -20,6 +20,8 @@ public sealed class Customer : Entity
         Address = address;
         Phone = phone;
     }
+
+    private Customer() { }
 
     public FirstName FirstName { get; private set; }
     public LastName LastName { get; private set; }

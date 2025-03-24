@@ -19,33 +19,31 @@ internal class SearchDispatchsQueryHandler
 
     public async Task<Result<IReadOnlyList<DispatchResponse>>> Handle(SearchDispatchsQuery request, CancellationToken cancellationToken)
     {
-        if (request.Id != Guid.Empty)
-        {
-            return new List<DispatchResponse>();
-        }
 
         using var connection = _sqlConnectionFactory.CreateConnection();
         
         const string sql = """
                    SELECT 
                         d.id AS Id,
-                        d.Weight AS Weight,
-                        d.Height AS Height,
-                        d.Width AS Width,
-                        d.Length AS Length
+                        d.package_weight AS Weight,
+                        d.package_height AS Height,
+                        d.package_width AS Width,
+                        d.package_length AS Length
                    FROM dispatchs d
+                   WHERE d.id = @Id
                    """;
-        
-        var dispatchs = await connection
-            .QueryAsync<DispatchResponse, PackageParamsResponse, DispatchResponse>(
-                sql,
-                (dispatch, packageParams) =>
-                {
-                    dispatch.PackageParams = packageParams;
-                    return dispatch;
-                });
 
-        return dispatchs.ToList();
+        var dispatchs = await connection.QueryAsync<DispatchResponse, PackageParamsResponse, DispatchResponse>(
+            sql,
+            (dispatch, packageParams) =>
+            {
+                dispatch.Package = packageParams;
+                return dispatch;
+            },
+            new { request.Id },
+            splitOn: "Weight");
+
+        return dispatchs.ToList();  
 
     }
 }

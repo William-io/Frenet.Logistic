@@ -4,5 +4,4 @@ namespace Frenet.Logistic.Application.Orders.ProcessOrder;
 
 public sealed record ProcessOrderCommand(
     Guid DispatchId,
-    Guid CustomerId,
-    DateTime ProssedDate) : ICommand<Guid>;
+    Guid CustomerId) : ICommand<Guid>;

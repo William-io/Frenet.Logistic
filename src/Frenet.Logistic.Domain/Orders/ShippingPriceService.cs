@@ -37,10 +37,10 @@ public class ShippingPriceService
             },
             package = new
             {
-                height = dispatch.PackageParams.Height,
-                width = dispatch.PackageParams.Width,
-                length = dispatch.PackageParams.Length,
-                weight = dispatch.PackageParams.Weight
+                height = dispatch.Package.Height,
+                width = dispatch.Package.Width,
+                length = dispatch.Package.Length,
+                weight = dispatch.Package.Weight
             }
         };
 

@@ -6,7 +6,7 @@ namespace Frenet.Logistic.Domain.Orders;
 
 public sealed class Order : Entity
 {
-    public Order(
+    private Order(
         Guid id, 
         Guid dispatchId,
         Guid customerId,
@@ -25,6 +25,9 @@ public sealed class Order : Entity
         ShippingName = shippingName;
         ShippingPrice = shippingPrice;
     }
+
+    private Order() { }
+
     public Guid DispatchId { get; private set; }
     public Guid CustomerId { get; private set; }
     public ZipCode ZipCode { get; private set; }

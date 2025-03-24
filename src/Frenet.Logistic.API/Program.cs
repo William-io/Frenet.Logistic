@@ -1,3 +1,4 @@
+using Frenet.Logistic.API.Extensions;
 using Frenet.Logistic.Application;
 using Frenet.Logistic.Infrastructure;
 
@@ -20,6 +21,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.ApplyMigrations();
+
+    app.SeedData();
 }
 
 app.UseHttpsRedirection();

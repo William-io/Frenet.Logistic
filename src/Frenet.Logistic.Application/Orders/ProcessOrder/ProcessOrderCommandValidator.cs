@@ -8,6 +8,5 @@ public  class ProcessOrderCommandValidator : AbstractValidator<ProcessOrderComma
     {
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.DispatchId).NotEmpty();
-        RuleFor(x => x.ProssedDate).NotEmpty();
     }
 }
