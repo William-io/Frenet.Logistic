@@ -1,4 +1,5 @@
-﻿using Frenet.Logistic.Infrastructure;
+﻿using Frenet.Logistic.API.Middleware;
+using Frenet.Logistic.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Frenet.Logistic.API.Extensions;
@@ -14,10 +15,10 @@ internal static class ApplicationBuilder
         dbContext.Database.Migrate();
     }
 
-    //public static void UseCustomExceptionHandler(this IApplicationBuilder app)
-    //{
-    //    app.UseMiddleware<ExceptionHandlingMiddleware>();
-    //}
+    public static void UseCustomExceptionHandler(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+    }
 
     //public static IApplicationBuilder UseRequestContextLogging(this IApplicationBuilder app)
     //{
