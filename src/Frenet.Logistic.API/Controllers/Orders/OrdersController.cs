@@ -1,5 +1,6 @@
 ﻿using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
+using Frenet.Logistic.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +35,7 @@ public class OrdersController : ControllerBase
             request.DispatchId,
             request.CustomerId);
 
-        var result = await _sender.Send(command, cancellationToken);
+        Result<Guid> result = await _sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {

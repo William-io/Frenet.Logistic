@@ -43,7 +43,7 @@ public class ShippingPriceService
                 weight = dispatch.Package.Weight
             }
         };
-
+        //Erro no response é preciso passar os dados de conexao ao serviço. 
         request.AddJsonBody(pacote);
 
         var response = await client.PostAsync(request);
