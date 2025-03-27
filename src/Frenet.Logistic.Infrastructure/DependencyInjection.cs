@@ -6,10 +6,12 @@ using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Customers;
 using Frenet.Logistic.Domain.Dispatchs;
 using Frenet.Logistic.Domain.Orders;
+using Frenet.Logistic.Infrastructure.Authentication;
 using Frenet.Logistic.Infrastructure.Clock;
 using Frenet.Logistic.Infrastructure.Data;
 using Frenet.Logistic.Infrastructure.Email;
 using Frenet.Logistic.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +43,12 @@ public static class DependencyInjection
         services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
         SqlMapper.AddTypeHandler(new DateHandler());
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
+        services.Configure<AutenticationOptions>(configuration.GetSection("Autentication"));
+
+        services.ConfigureOptions<JwtBearerOptionsSetup>();
 
         return services;
     }
