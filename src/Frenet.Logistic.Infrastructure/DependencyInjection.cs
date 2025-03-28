@@ -2,6 +2,7 @@
 using Frenet.Logistic.Application.Abstractions.Clock;
 using Frenet.Logistic.Application.Abstractions.DataFactory;
 using Frenet.Logistic.Application.Abstractions.Email;
+using Frenet.Logistic.Application.Authentication;
 using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Customers;
 using Frenet.Logistic.Domain.Dispatchs;
@@ -44,11 +45,15 @@ public static class DependencyInjection
 
         SqlMapper.AddTypeHandler(new DateHandler());
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
-        services.Configure<AutenticationOptions>(configuration.GetSection("Autentication"));
-
+        #region
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer();
+        services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
+        services.AddTransient<IJwtProvider, JwtProvider>();
+        #endregion
+
 
         return services;
     }

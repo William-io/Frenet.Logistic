@@ -24,10 +24,9 @@ internal sealed class CustomerSetting : IEntityTypeConfiguration<Customer>
             .HasConversion(lastName => lastName.Value, value => new LastName(value))
             .IsRequired();
 
-        builder.Property(customer => customer.Email)
-            .HasMaxLength(400)
-            .HasConversion(email => email.Value, value => new Domain.Customers.Email(value))
-            .IsRequired();
+        builder
+            .Property(customer => customer.Email)
+            .HasConversion(email => email.Value, email => Domain.Customers.Email.Create(email).Value);
 
         builder.HasIndex(customer => customer.Email)
             .IsUnique();

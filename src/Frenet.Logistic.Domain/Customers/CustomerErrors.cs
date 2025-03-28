@@ -10,5 +10,5 @@ public static class CustomerErrors
 
     public static readonly Error InvalidCredentials = new(
         "Customer.InvalidCredentials",
-        "As credenciais fornecidas eram inválidas");
+        "As credenciais fornecidas estão inválidas");
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frenet.Logistic.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250325164912_Initial")]
+    [Migration("20250328152639_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -34,8 +34,7 @@ namespace Frenet.Logistic.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")

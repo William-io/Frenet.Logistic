@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Frenet.Logistic.API.Controllers.Dispatchs;
 
-[Authorize]
 [ApiController]
 [Route("api/dispatchs")]
 public class DispatchsController : ControllerBase

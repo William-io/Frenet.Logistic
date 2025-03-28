@@ -18,7 +18,7 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     first_name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     last_name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    email = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
+                    email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     address_country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     address_state = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     address_zip_code = table.Column<string>(type: "nvarchar(max)", nullable: false),

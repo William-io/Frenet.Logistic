@@ -1,4 +1,5 @@
 ﻿using Frenet.Logistic.Application.Customers;
+using Frenet.Logistic.Application.Customers.LoginCustomer;
 using Frenet.Logistic.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +37,22 @@ public class CustomersController : ControllerBase
         if (result.IsFailure)
         {
             return BadRequest(result.Error);
+        }
+
+        return Ok(result.Value);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginCustomerCommand request, CancellationToken cancellationToken)
+    {
+        var command = new LoginCustomerCommand(request.Email);
+
+        Result<string> result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return Unauthorized(result.Error);
         }
 
         return Ok(result.Value);

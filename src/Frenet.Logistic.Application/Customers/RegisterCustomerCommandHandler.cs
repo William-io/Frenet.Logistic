@@ -17,10 +17,16 @@ internal sealed class RegisterCustomerCommandHandler : ICommandHandler<RegisterC
 
     public async Task<Result<Guid>> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
     {
+        var emailResult = Email.Create(request.Email);
+        if (emailResult.IsFailure)
+        {
+            return Result.Failure<Guid>(emailResult.Error);
+        }
+
         var customer = Customer.Create(
            new FirstName(request.FirstName),
            new LastName(request.LastName),
-           new Email(request.Email),
+           emailResult.Value,
            new Phone(request.Phone),
            new Address(
                request.Address.Country,
@@ -34,6 +40,5 @@ internal sealed class RegisterCustomerCommandHandler : ICommandHandler<RegisterC
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return customer.Id;
-
     }
 }

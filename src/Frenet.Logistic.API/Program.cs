@@ -23,7 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     app.ApplyMigrations();
-
+    //Remover para interromper a execução do seed;
     app.SeedData();
 }
 
@@ -31,7 +31,9 @@ app.UseHttpsRedirection();
 
 app.UseCustomExceptionHandler();
 
-//app.UseAuthorization();
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
