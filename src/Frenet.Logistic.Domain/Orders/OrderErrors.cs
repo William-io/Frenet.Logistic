@@ -6,7 +6,7 @@ public static class OrderErrors
 {
     public static readonly Error NotProcessing = new(
         "Order.Processing",
-        "Pedido não foi efetuado processamento!");
+        "Pedido não foi efetuado processamento ou já solicitado para envio!");
     
     public static readonly Error NotShipped = new(
         "Order.NotShipped",
@@ -18,7 +18,7 @@ public static class OrderErrors
     
     public static readonly Error Overlap = new(
         "Order.Overlap",
-        "O pedido atual está sobreposta a uma existente");
+        "O pedido atual já foi solicitado!");
 
     public static readonly Error NotFound = new(
         "Order.Found",

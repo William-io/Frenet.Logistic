@@ -2,6 +2,7 @@ using Frenet.Logistic.Domain.Dispatchs;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
+using Microsoft.Extensions.Logging;
 
 namespace Frenet.Logistic.Domain.Orders;
 
@@ -11,16 +12,21 @@ public class ShippingPriceService
     private readonly string _apiKey;
     private readonly string _userAgent;
 
-    public ShippingPriceService(IConfiguration configuration)
+    private readonly ILogger<ShippingPriceService> _logger;
+
+    public ShippingPriceService(IConfiguration configuration, ILogger<ShippingPriceService> logger)
     {
 
         _baseUrl = configuration["ShippingService:BaseUrl"];
         _apiKey = configuration["ShippingService:ApiKey"];
         _userAgent = configuration["ShippingService:UserAgent"];
+        _logger = logger;
     }
 
     public async Task<ShippingPriceDetails> CalcularFrete(Dispatch dispatch, ZipCode zipCode)
     {
+        _logger.LogInformation($"Calculando frete para o pacote {dispatch.Package} de {zipCode.CodeFrom} para {zipCode.CodeTo}");
+
         var options = new RestClientOptions(_baseUrl);
         var client = new RestClient(options);
 
@@ -52,7 +58,7 @@ public class ShippingPriceService
                 weight = dispatch.Package.Weight
             }
         };
-        //Erro no response é preciso passar os dados de conexao ao serviço. 
+        
         request.AddJsonBody(pacote);
 
         var response = await client.PostAsync(request);
@@ -63,27 +69,29 @@ public class ShippingPriceService
             try
             {
                 var shippingDetails = JsonConvert.DeserializeObject<List<ShippingPriceDetails>>(response.Content);
-                var company = shippingDetails?.FirstOrDefault(pd => pd.Id == 3);
+                var company = shippingDetails?.FirstOrDefault(pd => pd.Id == 1);
                 
                 if (company != null)
                 {
                     //teste
-                    Console.WriteLine("Company Name: {0} - Price: {1}", company.Name, company.Price);
+                    _logger.LogInformation("Company Name: {CompanyName} - Price: {Price}", company.Name, company.Price);
                     return new ShippingPriceDetails(company.Id, company.Name, company.Price);
                 }
                 else
                 {
+                    _logger.LogWarning("Não foi possível encontrar os detalhes de envio para a companhia especificada.");
                     throw new ApplicationException("Não foi possível encontrar os detalhes de envio para a companhia especificada.");
                 }
     
             }
             catch (JsonException e)
             {
-                throw new ApplicationException($"An error occurred while processing the shipping price details. JSON Deserialization Error: {e.Message}");
+                _logger.LogError(e, "Erro ao processar os detalhes do preço de envio.");
+                throw new ApplicationException($"Ocorreu um erro ao processar os detalhes do preço de envio. JSON Deserialization Error: {e.Message}");
             }
         }
 
-        Console.WriteLine("{0}", response);
+        _logger.LogError("A resposta não foi bem-sucedida ou o conteúdo está vazio. Response: {Response}", response);
         throw new ApplicationException("A resposta não foi bem-sucedida ou o conteúdo está vazio.");
     }
 }

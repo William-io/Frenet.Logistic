@@ -1,4 +1,7 @@
 ﻿using Asp.Versioning;
+using Frenet.Logistic.Application.Orders.CancelOrder;
+using Frenet.Logistic.Application.Orders.CompleteOrder;
+using Frenet.Logistic.Application.Orders.ConfirmOrder;
 using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
 using Frenet.Logistic.Domain.Abstractions;
@@ -30,7 +33,7 @@ public class OrdersController : ControllerBase
         return result.IsSuccess ? Ok(result.Value) : NotFound();
     }
 
-    [HttpPost]
+    [HttpPost("process")]
     public async Task<IActionResult> ProcessOrder(
         ProcessOrderRequest request, CancellationToken cancellationToken)
     {
@@ -40,11 +43,51 @@ public class OrdersController : ControllerBase
 
         Result<Guid> result = await _sender.Send(command, cancellationToken);
 
-        if (result.IsFailure)
-        {
+        if (result.IsFailure)      
             return BadRequest(result.Error);
-        }
+        
+        return Ok(result.Value);
+    }
 
-        return CreatedAtAction(nameof(GetOrder), new { id = result.Value }, result.Value);
+    [HttpPost("confirm")]
+    public async Task<IActionResult> ConfirmOrder(
+        ConfirmOrderRequest request, CancellationToken cancellationToken)
+    {
+        var command = new ConfirmOrderCommand(request.OrderId);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)       
+            return BadRequest(result.Error);    
+
+        return Ok(result);
+    }
+
+    [HttpPost("complete")]
+    public async Task<IActionResult> CompleteOrder(
+        CompleteOrderRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CompleteOrderCommand(request.OrderId);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)      
+            return BadRequest(result.Error);
+        
+        return Ok(result);
+    }
+
+    [HttpPost("cancel")]
+    public async Task<IActionResult> CancelOrder(
+        CancelOrderRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CancelOrderCommand(request.OrderId);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
     }
 }

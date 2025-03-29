@@ -20,15 +20,25 @@ internal static class Seeding
 
         List<object> dispatch = new();
 
+        /*Será populado a tabela dispatch, para armazenar paramentros de envio de pacotes para ser consumir com API externa [MelhorEnvio]   
+         */
         for (int i = 0; i < 10; i++)
         {
+            int height, width, length;
+            do
+            {
+                height = faker.Random.Int(1, 105); // Altura entre 1 e 105 cm
+                width = faker.Random.Int(1, 105); // Largura entre 1 e 105 cm
+                length = faker.Random.Int(1, 105); // Comprimento entre 1 e 105 cm
+            } while (height + width + length > 200); // Soma das dimensões até 200 cm
+
             dispatch.Add(new
             {
                 Id = Guid.NewGuid(),
-                Weight = faker.Random.Int(1, 100), // Peso entre 0.1 e 100.0
-                Height = faker.Random.Int(1, 100), // Altura entre 1 e 200 cm
-                Width = faker.Random.Int(1, 100), // Largura entre 1 e 200 cm
-                Length = faker.Random.Int(1, 100), // Comprimento entre 1 e 200 cm
+                Weight = faker.Random.Int(1, 30000) / 1000.0, // Peso entre 0.1 e 30.0 kg
+                Height = height,
+                Width = width,
+                Length = length,
                 LastDispatchOnUtc = faker.Date.Past(1), // Data de envio
             });
         }

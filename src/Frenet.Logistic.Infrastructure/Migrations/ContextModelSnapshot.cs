@@ -238,15 +238,15 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                         .HasColumnName("status");
 
                     b.HasKey("Id")
-                        .HasName("pk_order");
+                        .HasName("pk_orders");
 
                     b.HasIndex("CustomerId")
-                        .HasDatabaseName("ix_order_customer_id");
+                        .HasDatabaseName("ix_orders_customer_id");
 
                     b.HasIndex("DispatchId")
-                        .HasDatabaseName("ix_order_dispatch_id");
+                        .HasDatabaseName("ix_orders_dispatch_id");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("CustomerRole", b =>
@@ -373,14 +373,14 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_order_customers_customer_id");
+                        .HasConstraintName("fk_orders_customers_customer_id");
 
                     b.HasOne("Frenet.Logistic.Domain.Dispatchs.Dispatch", null)
                         .WithMany()
                         .HasForeignKey("DispatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_order_dispatchs_dispatch_id");
+                        .HasConstraintName("fk_orders_dispatchs_dispatch_id");
 
                     b.OwnsOne("Frenet.Logistic.Domain.Orders.ZipCode", "ZipCode", b1 =>
                         {
@@ -400,11 +400,11 @@ namespace Frenet.Logistic.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Order");
+                            b1.ToTable("Orders");
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId")
-                                .HasConstraintName("fk_order_order_id");
+                                .HasConstraintName("fk_orders_orders_id");
                         });
 
                     b.Navigation("ZipCode")

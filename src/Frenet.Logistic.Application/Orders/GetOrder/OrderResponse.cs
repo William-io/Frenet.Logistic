@@ -4,7 +4,7 @@ public sealed record OrderResponse(
     Guid Id,
     Guid CustomerId,
     Guid DispatchId,
-    int Status,
+    string Status,
     DateTime CreatedOnUtc,
     string ShippingName,
     string ShippingPrice);

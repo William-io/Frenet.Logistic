@@ -26,17 +26,13 @@ internal sealed class CompleteOrderCommandHandler : ICommandHandler<CompleteOrde
         Order? order = await _orderRepository.GetByIdAsync(request.OrderId, cancellationToken);
 
         if (order is null)
-        {
-            return Result.Failure(OrderErrors.NotFound);
-        }
-
+            return Result.Failure(OrderErrors.NotFound);       
+        //Dado tudo certo, produto foi entregue
         Result result = order.Complete(_dateTimeProvider.UtcNow);
 
-        if (result.IsFailure)
-        {
+        if (result.IsFailure)       
             return result;
-        }
-
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

@@ -1,4 +1,5 @@
 using Frenet.Logistic.Application.Abstractions.Messaging;
+using Frenet.Logistic.Application.Extensions;
 using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Orders;
 
@@ -29,7 +30,7 @@ internal sealed class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderR
             order.Id,
             order.CustomerId,
             order.DispatchId,
-            (int)order.Status,
+            order.Status.ToEnumString(),
             order.CreatedOnUtc,
             order.ShippingName,
             order.ShippingPrice));

@@ -30,6 +30,7 @@ internal sealed class CancelOrderCommandHandler : ICommandHandler<CancelOrderCom
             return Result.Failure(OrderErrors.NotFound);
         }
 
+        //Verifica se já foi entregue, caso contrario é cancelado mais mantido no banco.
         var result = order.Cancel(_dateTimeProvider.UtcNow);
 
         if (result.IsFailure)

@@ -1,10 +1,14 @@
 using Asp.Versioning.ApiExplorer;
 using Frenet.Logistic.API.Extensions;
+using Frenet.Logistic.API.Middleware;
 using Frenet.Logistic.API.OpenApi;
 using Frenet.Logistic.Application;
 using Frenet.Logistic.Infrastructure;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseNLog(); // NLog: Setup NLog for Dependency injection
 
 // Add services to the container.
 
@@ -45,10 +49,12 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 
     //Remover para interromper a execução do seed;
-    //app.SeedData();
+    app.SeedData();
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<RequestContextLoggingMiddleware>();
 
 app.UseCustomExceptionHandler();
 

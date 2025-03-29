@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Frenet.Logistic.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Roles : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,7 +76,7 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Orders",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -95,15 +95,15 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_order", x => x.id);
+                    table.PrimaryKey("pk_orders", x => x.id);
                     table.ForeignKey(
-                        name: "fk_order_customers_customer_id",
+                        name: "fk_orders_customers_customer_id",
                         column: x => x.customer_id,
                         principalTable: "Customers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_order_dispatchs_dispatch_id",
+                        name: "fk_orders_dispatchs_dispatch_id",
                         column: x => x.dispatch_id,
                         principalTable: "Dispatchs",
                         principalColumn: "id",
@@ -193,13 +193,13 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_order_customer_id",
-                table: "Order",
+                name: "ix_orders_customer_id",
+                table: "Orders",
                 column: "customer_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_order_dispatch_id",
-                table: "Order",
+                name: "ix_orders_dispatch_id",
+                table: "Orders",
                 column: "dispatch_id");
 
             migrationBuilder.CreateIndex(
@@ -215,7 +215,7 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 name: "customer_role");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "role_permission");
