@@ -16,5 +16,10 @@ internal sealed class CustomerRepository : Repository<Customer>, ICustomerReposi
         await _context
             .Set<Customer>()
             .FirstOrDefaultAsync(member => member.Email == email, cancellationToken);
-   
+
+    public async Task<List<Customer>> GetAllAsync(CancellationToken cancellationToken = default) =>
+        await _context
+            .Set<Customer>()
+            .ToListAsync(cancellationToken);
+
 }

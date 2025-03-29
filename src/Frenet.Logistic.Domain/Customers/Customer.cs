@@ -29,6 +29,8 @@ public sealed class Customer : Entity
     public Address Address { get; private set; }
     public Phone Phone { get; private set; }
 
+    public ICollection<Role> Roles { get; set; }
+
     //Factory
     public static Customer Create(FirstName firstName, LastName lastName, Email email, Phone phone, Address address)
     {

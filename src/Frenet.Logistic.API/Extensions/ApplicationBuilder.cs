@@ -1,5 +1,6 @@
 ﻿using Frenet.Logistic.API.Middleware;
 using Frenet.Logistic.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Frenet.Logistic.API.Extensions;

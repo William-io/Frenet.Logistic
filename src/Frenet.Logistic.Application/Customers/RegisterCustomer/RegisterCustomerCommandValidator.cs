@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Frenet.Logistic.Application.Customers;
+namespace Frenet.Logistic.Application.Customers.RegisterCustomer;
 
 internal sealed class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustomerCommand>
 {

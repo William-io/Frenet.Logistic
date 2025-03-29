@@ -13,7 +13,7 @@ internal sealed class CustomerSetting : IEntityTypeConfiguration<Customer>
 
         builder.HasKey(customer => customer.Id);
 
-        //tipo valor que não é tipo primitivo e precisa ser convertido
+
         builder.Property(customer => customer.FirstName)
             .HasMaxLength(200)
             .HasConversion(firstName => firstName.Value, value => new FirstName(value))
@@ -36,7 +36,8 @@ internal sealed class CustomerSetting : IEntityTypeConfiguration<Customer>
             .HasConversion(firstName => firstName.Value, value => new Phone(value))
             .IsRequired();
 
-        builder.OwnsOne(customer => customer.Address);      
+        builder.OwnsOne(customer => customer.Address);    
+          
 
     }
 }

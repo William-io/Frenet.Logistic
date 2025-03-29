@@ -5,5 +5,5 @@ namespace Frenet.Logistic.Application.Authentication;
 
 public interface IJwtProvider
 {
-    string Generate(Customer customer);
+    Task<string> Generate(Customer customer);
 }

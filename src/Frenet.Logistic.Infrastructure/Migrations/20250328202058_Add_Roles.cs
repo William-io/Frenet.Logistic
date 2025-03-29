@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Frenet.Logistic.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Add_Roles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +50,32 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_permissions", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_roles", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Order",
                 columns: table => new
                 {
@@ -82,6 +110,82 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "customer_role",
+                columns: table => new
+                {
+                    customers_id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    roles_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_customer_role", x => new { x.customers_id, x.roles_id });
+                    table.ForeignKey(
+                        name: "fk_customer_role_customer_customers_id",
+                        column: x => x.customers_id,
+                        principalTable: "Customers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_customer_role_role_roles_id",
+                        column: x => x.roles_id,
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "role_permission",
+                columns: table => new
+                {
+                    role_id = table.Column<int>(type: "int", nullable: false),
+                    permission_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_role_permission", x => new { x.role_id, x.permission_id });
+                    table.ForeignKey(
+                        name: "fk_role_permission_permissions_permission_id",
+                        column: x => x.permission_id,
+                        principalTable: "Permissions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_role_permission_roles_role_id",
+                        column: x => x.role_id,
+                        principalTable: "Roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Permissions",
+                columns: new[] { "id", "name" },
+                values: new object[,]
+                {
+                    { 1, "ReadMember" },
+                    { 2, "UpdateMember" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "id", "name" },
+                values: new object[] { 1, "Registered" });
+
+            migrationBuilder.InsertData(
+                table: "role_permission",
+                columns: new[] { "permission_id", "role_id" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_customer_role_roles_id",
+                table: "customer_role",
+                column: "roles_id");
+
             migrationBuilder.CreateIndex(
                 name: "ix_customers_email",
                 table: "Customers",
@@ -97,19 +201,36 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                 name: "ix_order_dispatch_id",
                 table: "Order",
                 column: "dispatch_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_role_permission_permission_id",
+                table: "role_permission",
+                column: "permission_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "customer_role");
+
+            migrationBuilder.DropTable(
                 name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "role_permission");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Dispatchs");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }

@@ -1,47 +1,37 @@
-
-
-using Dapper;
-using Frenet.Logistic.Application.Abstractions.DataFactory;
 using Frenet.Logistic.Application.Abstractions.Messaging;
 using Frenet.Logistic.Domain.Abstractions;
+using Frenet.Logistic.Domain.Orders;
 
 namespace Frenet.Logistic.Application.Orders.GetOrder;
 
 internal sealed class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderResponse>
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IOrderRepository _orderRepository;
 
-    public GetOrderQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetOrderQueryHandler(IOrderRepository orderRepository)
     {
-        _sqlConnectionFactory = sqlConnectionFactory;
+        _orderRepository = orderRepository;
     }
 
     public async Task<Result<OrderResponse>> Handle(GetOrderQuery request, CancellationToken cancellationToken)
     {
-        using var connection = _sqlConnectionFactory.CreateConnection();
 
-        const string sql = """
-            SELECT
-                id as Id,
-                order_id AS OrderId,
-                customer_id AS CustomerId,
-                status AS Status,
-                created_on_utc AS CreatedOnUtc,
-                shipping_name AS ShippingName,
-                shipping_price AS ShippingPrice
-            FROM orders
-            WHERE id = @OrderId
-            """;
+        var order = await _orderRepository.GetByIdAsync(request.OrderId, cancellationToken);
 
-        var order = await connection.QueryFirstOrDefaultAsync<OrderResponse>(
-            sql,
-            new
-            {
-                request.OrderId
-            });
+        if (order is null)
+        {
+            return Result.Failure<OrderResponse>(new Error(
+              "Order.NotFound",
+              $"Pedido {request.OrderId} não encontrado!"));
+        }
 
-
-
-        return order;
+        return Result.Success(new OrderResponse(
+            order.Id,
+            order.CustomerId,
+            order.DispatchId,
+            (int)order.Status,
+            order.CreatedOnUtc,
+            order.ShippingName,
+            order.ShippingPrice));
     }
 }

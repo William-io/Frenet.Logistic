@@ -28,7 +28,7 @@ internal sealed class LoginCustomerHandler : ICommandHandler<LoginCustomerComman
                 Error.Email.InvalidCredentials);
         }
 
-        string token = _jwtProvider.Generate(customer);
+        string token = await _jwtProvider.Generate(customer);
 
         return Result.Success(token);
     }

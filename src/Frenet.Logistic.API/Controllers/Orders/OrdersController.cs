@@ -1,4 +1,5 @@
-﻿using Frenet.Logistic.Application.Orders.GetOrder;
+﻿using Asp.Versioning;
+using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
 using Frenet.Logistic.Domain.Abstractions;
 using MediatR;
@@ -7,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Frenet.Logistic.API.Controllers.Orders;
 
 [ApiController]
-[Route("api/orders")]
+[ApiVersion("1")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class OrdersController : ControllerBase
 {
 
@@ -22,7 +24,8 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetOrder(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetOrderQuery(id);
-        var result = await _sender.Send(query, cancellationToken);
+
+        Result<OrderResponse> result = await _sender.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : NotFound();
     }

@@ -21,12 +21,12 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddTransient<ShippingPriceService>();
 
-        services.AddLogging(loggingBuilder =>
-        {
-            loggingBuilder.ClearProviders();
-            loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-            loggingBuilder.AddNLog("nlog.config");
-        });
+        //services.AddLogging(loggingBuilder =>
+        //{
+        //    loggingBuilder.ClearProviders();
+        //    loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+        //    loggingBuilder.AddNLog("nlog.config");
+        //});
 
         return services;
     }

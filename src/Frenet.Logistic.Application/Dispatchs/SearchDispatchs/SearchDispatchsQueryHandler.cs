@@ -1,5 +1,3 @@
-
-
 using Dapper;
 using Frenet.Logistic.Application.Abstractions.DataFactory;
 using Frenet.Logistic.Application.Abstractions.Messaging;

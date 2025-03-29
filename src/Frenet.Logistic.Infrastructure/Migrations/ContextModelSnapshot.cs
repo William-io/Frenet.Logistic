@@ -22,6 +22,25 @@ namespace Frenet.Logistic.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CustomerRole", b =>
+                {
+                    b.Property<Guid>("CustomersId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("customers_id");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int")
+                        .HasColumnName("roles_id");
+
+                    b.HasKey("CustomersId", "RolesId")
+                        .HasName("pk_customer_role");
+
+                    b.HasIndex("RolesId")
+                        .HasDatabaseName("ix_customer_role_roles_id");
+
+                    b.ToTable("customer_role", (string)null);
+                });
+
             modelBuilder.Entity("Frenet.Logistic.Domain.Customers.Customer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -60,6 +79,96 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                         .HasDatabaseName("ix_customers_email");
 
                     b.ToTable("Customers", (string)null);
+                });
+
+            modelBuilder.Entity("Frenet.Logistic.Domain.Customers.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.ToTable("Permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ReadMember"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "UpdateMember"
+                        });
+                });
+
+            modelBuilder.Entity("Frenet.Logistic.Domain.Customers.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_roles");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Registered"
+                        });
+                });
+
+            modelBuilder.Entity("Frenet.Logistic.Domain.Customers.RolePermission", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int")
+                        .HasColumnName("role_id");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permission");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permission_permission_id");
+
+                    b.ToTable("role_permission", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 2
+                        });
                 });
 
             modelBuilder.Entity("Frenet.Logistic.Domain.Dispatchs.Dispatch", b =>
@@ -140,6 +249,23 @@ namespace Frenet.Logistic.Infrastructure.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
+            modelBuilder.Entity("CustomerRole", b =>
+                {
+                    b.HasOne("Frenet.Logistic.Domain.Customers.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_role_customer_customers_id");
+
+                    b.HasOne("Frenet.Logistic.Domain.Customers.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_customer_role_role_roles_id");
+                });
+
             modelBuilder.Entity("Frenet.Logistic.Domain.Customers.Customer", b =>
                 {
                     b.OwnsOne("Frenet.Logistic.Domain.Customers.Address", "Address", b1 =>
@@ -184,6 +310,23 @@ namespace Frenet.Logistic.Infrastructure.Migrations
 
                     b.Navigation("Address")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Frenet.Logistic.Domain.Customers.RolePermission", b =>
+                {
+                    b.HasOne("Frenet.Logistic.Domain.Customers.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permission_permissions_permission_id");
+
+                    b.HasOne("Frenet.Logistic.Domain.Customers.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permission_roles_role_id");
                 });
 
             modelBuilder.Entity("Frenet.Logistic.Domain.Dispatchs.Dispatch", b =>

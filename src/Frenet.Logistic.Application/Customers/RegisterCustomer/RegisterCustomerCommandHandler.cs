@@ -2,7 +2,7 @@
 using Frenet.Logistic.Domain.Abstractions;
 using Frenet.Logistic.Domain.Customers;
 
-namespace Frenet.Logistic.Application.Customers;
+namespace Frenet.Logistic.Application.Customers.RegisterCustomer;
 
 internal sealed class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCommand, Guid>
 {

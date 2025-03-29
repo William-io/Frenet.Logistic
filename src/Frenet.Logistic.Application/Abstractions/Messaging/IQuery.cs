@@ -8,7 +8,4 @@ namespace Frenet.Logistic.Application.Abstractions.Messaging;
    Result<TResponse> é um tipo de retorno que encapsula o resultado da operação, 
   indicando sucesso ou falha atraves o Result.
  */
-public interface IQuery<TResponse> : IRequest<Result<TResponse>>
-{
-    
-}
+public interface IQuery<TResponse> : IRequest<Result<TResponse>> { }
