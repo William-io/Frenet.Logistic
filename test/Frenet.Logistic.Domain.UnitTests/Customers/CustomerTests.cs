@@ -33,7 +33,7 @@ public class CustomerTests : BaseTesting
         var eventos = customer.GetDomainEvents();
         Debug.WriteLine($"Total de eventos: {eventos.Count}");
 
-        var domainEvent = AfirmarQueEventoDominioFoiExecutado<CustomerCreatedDomainEvent>(customer);
+        var domainEvent = AssertDomainEventWasExecuted<CustomerCreatedDomainEvent>(customer);
 
         domainEvent.CustomerId.Should().Be(customer.Id);
     }

@@ -5,7 +5,8 @@ namespace Frenet.Logistic.Domain.UnitTests.Bases;
 
 public class BaseTesting
 {
-    public static T AfirmarQueEventoDominioFoiExecutado<T>(Entity entity) where T : IDomainEvent
+    //Afirmacao que o evento de dominio foi executado com sucesso.
+    public static T AssertDomainEventWasExecuted<T>(Entity entity) where T : IDomainEvent
     {
         var allEvents = entity.GetDomainEvents().ToList();
 
