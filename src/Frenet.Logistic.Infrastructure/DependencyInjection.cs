@@ -29,7 +29,7 @@ public static class DependencyInjection
         services.AddTransient<IEmailService, EmailService>();
 
         var connectionString = configuration.GetConnectionString("Database") ??
-            throw new ArgumentNullException(nameof(configuration),"Database connection string não localizada!");
+            throw new ArgumentNullException(nameof(configuration), "Database connection string não localizada!");
 
 
         services.AddDbContext<Context>(options =>
@@ -41,28 +41,43 @@ public static class DependencyInjection
         services.AddScoped<IDispatchRepository, DispatchRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
 
+        // Add unit of work
         services.AddScoped<IUnitOfWork>(ui => ui.GetRequiredService<Context>());
 
+        // Add SQL connection factory
         services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
+        // Configurar manipuladores de tipo do Dapper
         SqlMapper.AddTypeHandler(new DateHandler());
 
+        // Configurar autenticação e autorização
+        ConfigureAuthentication(services, configuration);
 
-        #region
+        // Configurar versionamento de API
+        ConfigureApiVersioning(services);
+
+        return services;
+    }
+
+    private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
+    {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
+
         services.ConfigureOptions<JwtOptionsSetup>();
         services.ConfigureOptions<JwtBearerOptionsSetup>();
+
         services.AddTransient<IJwtProvider, JwtProvider>();
         services.AddAuthorization();
         services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
         services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
-        services.AddTransient<IJwtProvider, JwtProvider>();
         services.AddTransient<IPermissionService, PermissionService>();
-        #endregion
+    }
 
+    private static void ConfigureApiVersioning(IServiceCollection services)
+    {
         services.AddApiVersioning(options =>
         {
             options.DefaultApiVersion = new ApiVersion(1);
@@ -74,7 +89,5 @@ public static class DependencyInjection
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
-
-        return services;
     }
 }

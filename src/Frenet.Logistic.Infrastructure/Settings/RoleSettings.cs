@@ -20,6 +20,6 @@ internal sealed class RoleSettings : IEntityTypeConfiguration<Role>
         builder.HasMany(x => x.Customers)
            .WithMany(x => x.Roles);
 
-        builder.HasData(Role.GetValues());
+        builder.HasData(Role.Registered);
     }
 }

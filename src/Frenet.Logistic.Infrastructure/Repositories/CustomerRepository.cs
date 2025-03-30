@@ -22,4 +22,14 @@ internal sealed class CustomerRepository : Repository<Customer>, ICustomerReposi
             .Set<Customer>()
             .ToListAsync(cancellationToken);
 
+    public override void Add(Customer user)
+    {
+        foreach (Role role in user.Roles)
+        {
+            _context.Attach(role);
+        }
+
+        _context.Add(user);
+    }
+
 }

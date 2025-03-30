@@ -64,14 +64,21 @@ public sealed class Order : Entity
         ordering.AddDomainEvent(new OrderingProcessingDomainEvent(ordering.Id));
         
         dispatch.LastDispatchOnUtc = utcNow;
-        
+
         return ordering;
     }
-    
+
     public Result Confirm(DateTime utcNow)
     {
         if (Status != OrderStatus.Processing)
+        {
+            if (Status == OrderStatus.Cancelled)
+            {
+                return Result.Failure(OrderErrors.Cancelled);
+            }
+
             return Result.Failure(OrderErrors.NotProcessing);
+        }
 
         //Caso contrario foi enviado
         Status = OrderStatus.Shipped;
@@ -85,8 +92,15 @@ public sealed class Order : Entity
     public Result Complete(DateTime utcNow)
     {
         if (Status != OrderStatus.Shipped)
+        {
+            if (Status == OrderStatus.Cancelled)
+            {
+                return Result.Failure(OrderErrors.Cancelled);
+            }
+
             return Result.Failure(OrderErrors.NotShipped);
-        
+        }
+
         Status = OrderStatus.Delivered;
         DeliveredOnUtc = utcNow;
 
@@ -111,5 +125,13 @@ public sealed class Order : Entity
         AddDomainEvent(new OrderCancelledDomainEvent(Id));
         
        return Result.Success();
+    }
+
+    public Result Canceled()
+    {
+        if (Status != OrderStatus.Cancelled)
+            return Result.Failure(OrderErrors.NotCancelled);
+
+        return Result.Success();
     }
 }

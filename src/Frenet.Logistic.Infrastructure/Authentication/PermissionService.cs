@@ -1,4 +1,7 @@
-﻿namespace Frenet.Logistic.Infrastructure.Authentication;
+﻿using Frenet.Logistic.Domain.Customers;
+using Microsoft.EntityFrameworkCore;
+
+namespace Frenet.Logistic.Infrastructure.Authentication;
 
 public class PermissionService : IPermissionService
 {
@@ -11,8 +14,17 @@ public class PermissionService : IPermissionService
 
     public async Task<HashSet<string>> GetPermissionsAsync(Guid customerId)
     {
-        
-        return new HashSet<string> { "ReadMember", "UpdateMember" };
+        IReadOnlyCollection<Role>[] roles = await _context.Set<Customer>()
+            .Include(x => x.Roles)
+            .ThenInclude(x => x.Permissions)
+            .Where(x => x.Id == customerId)
+            .Select(x => x.Roles)
+            .ToArrayAsync();
 
+        return roles
+            .SelectMany(x => x)
+            .SelectMany(x => x.Permissions)
+            .Select(x => x.Name)
+            .ToHashSet();
     }
 }

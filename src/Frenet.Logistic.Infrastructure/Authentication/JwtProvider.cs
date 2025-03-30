@@ -27,7 +27,7 @@ internal sealed class JwtProvider : IJwtProvider
             new(JwtRegisteredClaimNames.Email, member.Email.Value)
         };
 
-        HashSet<string> permissions = await _permissionService
+        HashSet<string> permissions =  await _permissionService
             .GetPermissionsAsync(member.Id);
 
         foreach (string permission in permissions)

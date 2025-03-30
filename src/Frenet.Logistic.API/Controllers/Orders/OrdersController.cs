@@ -2,6 +2,7 @@
 using Frenet.Logistic.Application.Orders.CancelOrder;
 using Frenet.Logistic.Application.Orders.CompleteOrder;
 using Frenet.Logistic.Application.Orders.ConfirmOrder;
+using Frenet.Logistic.Application.Orders.DeleteOrder;
 using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
 using Frenet.Logistic.Domain.Abstractions;
@@ -49,7 +50,7 @@ public class OrdersController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost("confirm")]
+    [HttpPut("confirm")]
     public async Task<IActionResult> ConfirmOrder(
         ConfirmOrderRequest request, CancellationToken cancellationToken)
     {
@@ -63,7 +64,7 @@ public class OrdersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("complete")]
+    [HttpPut("complete")]
     public async Task<IActionResult> CompleteOrder(
         CompleteOrderRequest request, CancellationToken cancellationToken)
     {
@@ -77,11 +78,24 @@ public class OrdersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("cancel")]
+    [HttpPut("cancel")]
     public async Task<IActionResult> CancelOrder(
         CancelOrderRequest request, CancellationToken cancellationToken)
     {
         var command = new CancelOrderCommand(request.OrderId);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteOrder(Guid id, CancellationToken cancellationToken)
+    {
+        var command = new DeleteOrderCommand(id);
 
         Result result = await _sender.Send(command, cancellationToken);
 

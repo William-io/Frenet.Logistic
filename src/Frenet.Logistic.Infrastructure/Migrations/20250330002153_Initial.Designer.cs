@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Frenet.Logistic.Infrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250329170642_Initial")]
+    [Migration("20250330002153_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

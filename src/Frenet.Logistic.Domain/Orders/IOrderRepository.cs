@@ -7,4 +7,5 @@ public interface IOrderRepository
     Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> IsOverlappingAsync(Dispatch dispatch, CancellationToken cancellationToken = default);
     void Add(Order order);
+    void Delete(Order order);
 }

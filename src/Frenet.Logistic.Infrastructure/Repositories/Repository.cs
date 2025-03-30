@@ -16,9 +16,14 @@ internal abstract class Repository<T> where T : Entity
             .FirstOrDefaultAsync(customer => customer.Id == id, cancellationToken);
     }
 
-    public void Add(T entity)
+    public virtual void Add(T entity)
     {
         _context.Set<T>().Add(entity);
+    }
+
+    public void Delete(T entity)
+    {
+        _context.Set<T>().Remove(entity);
     }
 
 }

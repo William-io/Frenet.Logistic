@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.API", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{3572991B-3F41-43D8-BE1D-648D0C228E37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frenet.Logistic.Domain.UnitTests", "test\Frenet.Logistic.Domain.UnitTests\Frenet.Logistic.Domain.UnitTests.csproj", "{F5E433DE-202B-4716-B57D-CED7E3C75A87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{DC00EC82-2705-41DD-9E68-EEAF66E2201C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC00EC82-2705-41DD-9E68-EEAF66E2201C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC00EC82-2705-41DD-9E68-EEAF66E2201C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5E433DE-202B-4716-B57D-CED7E3C75A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E433DE-202B-4716-B57D-CED7E3C75A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E433DE-202B-4716-B57D-CED7E3C75A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E433DE-202B-4716-B57D-CED7E3C75A87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{97BD228D-8692-4945-BDEC-0C9FDACC1479} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{AAD3BC67-0C8B-46FA-9DE7-5355DA0CCBBC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{DC00EC82-2705-41DD-9E68-EEAF66E2201C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F5E433DE-202B-4716-B57D-CED7E3C75A87} = {3572991B-3F41-43D8-BE1D-648D0C228E37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C71DB0F1-2D46-4616-B3AF-103FCF954A4C}

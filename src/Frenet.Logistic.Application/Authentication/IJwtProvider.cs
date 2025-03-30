@@ -1,5 +1,4 @@
-﻿using Frenet.Logistic.Domain.Abstractions;
-using Frenet.Logistic.Domain.Customers;
+﻿using Frenet.Logistic.Domain.Customers;
 
 namespace Frenet.Logistic.Application.Authentication;
 

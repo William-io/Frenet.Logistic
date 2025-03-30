@@ -24,4 +24,12 @@ public static class OrderErrors
         "Order.Found",
         "Pedido com o identificador especificado não foi encontrada");
 
+    public static readonly Error Cancelled = new(
+       "Order.Cancelled",
+       "Pedido foi cancelado!");
+
+    public static readonly Error NotCancelled = new(
+       "Order.NotCancelled",
+       "Pedido não foi cancelado!");
+
 }

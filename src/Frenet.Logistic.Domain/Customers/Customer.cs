@@ -5,6 +5,7 @@ namespace Frenet.Logistic.Domain.Customers;
 
 public sealed class Customer : Entity
 {
+    private readonly List<Role> _roles = new();
     private Customer(
         Guid id,
         FirstName firstName,
@@ -29,7 +30,7 @@ public sealed class Customer : Entity
     public Address Address { get; private set; }
     public Phone Phone { get; private set; }
 
-    public ICollection<Role> Roles { get; set; }
+    public IReadOnlyCollection<Role> Roles => _roles.ToList();
 
     //Factory
     public static Customer Create(FirstName firstName, LastName lastName, Email email, Phone phone, Address address)
@@ -37,7 +38,9 @@ public sealed class Customer : Entity
         var customer = new Customer(Guid.NewGuid(), firstName, lastName, email, address, phone);
         
         customer.AddDomainEvent(new CustomerCreatedDomainEvent(customer.Id));
-        
+
+        customer._roles.Add(Role.Registered);
+
         return customer;
     }
 }

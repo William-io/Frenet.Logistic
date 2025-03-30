@@ -1,5 +1,4 @@
-﻿using Frenet.Logistic.Application.Abstractions.Messaging;
-using Frenet.Logistic.Domain.Customers;
+﻿using Frenet.Logistic.Domain.Customers;
 
 namespace Frenet.Logistic.API.Controllers.Customers;
 
