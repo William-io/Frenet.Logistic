@@ -1,3 +1,88 @@
+# Guia de Execução do Projeto
+
+## 1. Configuração Inicial do Banco de Dados
+
+Para atualizar o banco de dados utilizando as migrations existentes, execute os seguintes comandos:
+
+```bash
+# Navegar até o diretório do projeto
+cd seu-projeto
+
+# Executar as migrations existentes
+dotnet ef database update
+```
+
+## 2. Autenticação e Obtenção de Token
+
+### 2.1. Registrar uma Nova Conta
+
+Para criar uma nova conta, faça uma requisição POST para o endpoint:
+
+```http
+POST /api/v1/Customers/register
+```
+
+Exemplo de payload:
+```json
+{
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phone": "string",
+  "password": "string",
+  "address": {
+    "country": "string",
+    "state": "string",
+    "zipCode": "string",
+    "city": "string",
+    "street": "string"
+  }
+}
+```
+
+### 2.2. Efetuar Login
+
+Após registrar sua conta, faça login para obter o token de autenticação. Use o endpoint:
+
+```http
+POST /api/v1/Customers/login
+```
+
+Exemplo de payload:
+```json
+{
+    "email": "seu.email@exemplo.com"
+}
+```
+
+Resposta esperada:
+```json
+{
+    "token": "seu_token_jwt_aqui"
+}
+```
+
+## 3. Utilizando o Token
+
+Para fazer requisições autenticadas, inclua o token no header da requisição:
+
+```http
+Bearer (apiKey) PARA SWAGGER!!
+Digite 'Bearer' [espaço] e seu token. Exemplo: 'Bearer abcdef123456'
+//Dentro do campo Value:
+```
+
+## Observações Importantes
+
+1. O token é gerado automaticamente após um login bem-sucedido
+2. Mantenha seu token seguro e não o compartilhe
+3. Utilize sempre HTTPS para suas requisições
+4. Certifique-se de que todas as migrations foram executadas antes de iniciar o uso do sistema
+
+## Visualizando Token:
+há inseridas as permissões em seu Token: [ReadMember] / [UpdateMember]
+> https://jwt.io/
+
 <details>
   <summary>Especificações das Camadas da Aplicação</summary>
 
