@@ -20,7 +20,7 @@ internal static class Seeding
 
         List<object> dispatch = new();
 
-        /*Será populado a tabela dispatch, para armazenar paramentros de envio de pacotes para ser consumir com API externa [MelhorEnvio]   
+        /*Será populado a tabela dispatch, para armazenar parametros de envio de pacotes para ser consumir com API externa [MelhorEnvio]   
          */
         for (int i = 0; i < 10; i++)
         {
@@ -49,8 +49,6 @@ internal static class Seeding
         VALUES (@Id, @Weight, @Height, @Width, @Length, @LastDispatchOnUtc);
         """;
 
-
         connection.Execute(sql, dispatch);
-
     }
 }

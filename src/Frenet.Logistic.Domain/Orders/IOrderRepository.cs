@@ -8,4 +8,6 @@ public interface IOrderRepository
     Task<bool> IsOverlappingAsync(Dispatch dispatch, CancellationToken cancellationToken = default);
     void Add(Order order);
     void Delete(Order order);
+
+    Task<IReadOnlyList<Order>> GetAllAsync(CancellationToken cancellationToken = default);
 }

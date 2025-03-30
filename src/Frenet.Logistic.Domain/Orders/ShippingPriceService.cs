@@ -23,7 +23,12 @@ public class ShippingPriceService
         _logger = logger;
     }
 
-    public async Task<ShippingPriceDetails> CalcularFrete(Dispatch dispatch, ZipCode zipCode)
+    public ShippingPriceService()
+    {
+        
+    }
+
+    public virtual async Task<ShippingPriceDetails> CalcularFrete(Dispatch dispatch, ZipCode zipCode)
     {
         _logger.LogInformation($"Calculando frete para o pacote {dispatch.Package} de {zipCode.CodeFrom} para {zipCode.CodeTo}");
 

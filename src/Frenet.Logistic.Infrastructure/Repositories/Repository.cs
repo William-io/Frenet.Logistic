@@ -16,6 +16,11 @@ internal abstract class Repository<T> where T : Entity
             .FirstOrDefaultAsync(customer => customer.Id == id, cancellationToken);
     }
 
+    public async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<T>().ToListAsync(cancellationToken);
+    }
+
     public virtual void Add(T entity)
     {
         _context.Set<T>().Add(entity);

@@ -3,6 +3,7 @@ using Frenet.Logistic.Application.Orders.CancelOrder;
 using Frenet.Logistic.Application.Orders.CompleteOrder;
 using Frenet.Logistic.Application.Orders.ConfirmOrder;
 using Frenet.Logistic.Application.Orders.DeleteOrder;
+using Frenet.Logistic.Application.Orders.GetAllOrder;
 using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
 using Frenet.Logistic.Domain.Abstractions;
@@ -23,6 +24,17 @@ public class OrdersController : ControllerBase
     {
         _sender = sender;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetOrders(CancellationToken cancellationToken)
+    {
+        var query = new GetAllOrderQuery();
+
+        Result<IReadOnlyList<GetAllOrderResponse>> result = await _sender.Send(query, cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : NotFound();
+    }
+    
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOrder(Guid id, CancellationToken cancellationToken)

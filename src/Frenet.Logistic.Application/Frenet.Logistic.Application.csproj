@@ -17,4 +17,8 @@
       <ProjectReference Include="..\Frenet.Logistic.Domain\Frenet.Logistic.Domain.csproj" />
     </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Frenet.Logistic.Application.UnitTests" />
+	</ItemGroup>
+
 </Project>

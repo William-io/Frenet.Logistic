@@ -28,7 +28,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    // Obter o provedor de descrição de versões da API
+    // Obter o provedor de descriï¿½ï¿½o de versï¿½es da API
     var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
     app.UseSwaggerUI(c =>
@@ -41,14 +41,14 @@ if (app.Environment.IsDevelopment())
         }
 
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Frenet Logistic API v1");
-        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None); // Opção para não expandir todos os endpoints
-        c.EnableDeepLinking(); // Permite links diretos para operações específicas
-        c.DisplayRequestDuration(); // Mostra a duração das requisições
+        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None); // Opï¿½ï¿½o para nï¿½o expandir todos os endpoints
+        c.EnableDeepLinking(); // Permite links diretos para operaï¿½ï¿½es especï¿½ficas
+        c.DisplayRequestDuration(); // Mostra a duraï¿½ï¿½o das requisiï¿½ï¿½es
     });
 
     app.ApplyMigrations();
 
-    //Remover para interromper a execução do seed;
+    //Remover para interromper a execuï¿½ï¿½o do seed;
     app.SeedData();
 }
 
