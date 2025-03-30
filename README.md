@@ -22,6 +22,7 @@ Frenet.Logistic.API/
 
 <details>
   <summary>Funcionalidades Principais | Frenet.Logistic.API</summary>
+  
   ## Middleware de Tratamento de Exceções
   O `ExceptionHandlingMiddleware` intercepta exceções lançadas durante o processamento de requisições e as transforma em respostas HTTP estruturadas:
   
