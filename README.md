@@ -1,3 +1,6 @@
+<details>
+  <summary>Especificações das Camadas da Aplicação</summary>
+
 # Frenet.Logistic.Api
 A camada de API está organizada da seguinte forma:
 
@@ -417,6 +420,119 @@ A camada de domínio implementa diversos princípios e padrões:
 1. Pedido é cancelado (se ainda não entregue)
 2. Status muda para "Cancelled"
 3. Evento de domínio notifica sobre o cancelamento
+</details>
 
+# Estrutura do Projeto Frenet.Logistic.Infrastructure
+
+## Diretórios e Arquivos
+
+```
+Frenet.Logistic.Infrastructure/
+├── Authentication/              # Implementação de autenticação e autorização
+│   ├── CustomClaims.cs          # Claims personalizadas para JWT
+│   ├── HasPermission.cs         # Atributo para verificação de permissões
+│   ├── IPermissionService.cs    # Interface do serviço de permissões
+│   ├── JwtBearerOptionsSetup.cs # Configuração do JWT Bearer
+│   ├── JwtOptions.cs            # Opções de configuração do JWT
+│   ├── JwtOptionsSetup.cs       # Setup das opções do JWT
+│   ├── JwtProvider.cs           # Provedor de tokens JWT
+│   ├── Permission.cs            # Enumeração de permissões
+│   ├── PermissionAuthorizationHandler.cs # Handler para autorização baseada em permissões
+│   ├── PermissionAuthorizationPolicyProvider.cs # Provedor de políticas de autorização
+│   ├── PermissionRequirement.cs # Requisito de permissão para autorização
+│   └── PermissionService.cs     # Serviço de gerenciamento de permissões
+├── Clock/                      # Implementações relacionadas a tempo/data
+│   └── DateTimeProvider.cs     # Provedor de data/hora do sistema
+├── Constants/                  # Constantes da aplicação
+│   └── Tables.cs               # Nomes de tabelas do banco de dados
+├── Data/                       # Componentes de acesso a dados
+│   ├── DateHandler.cs          # Manipulador de datas para Dapper
+│   └── SqlConnectionFactory.cs # Fábrica de conexões SQL
+├── Email/                      # Implementações de serviços de email
+├── Migrations/                 # Migrações do Entity Framework Core
+│   ├── 20250330002153_Initial.cs # Migração inicial do banco de dados
+│   └── ContextModelSnapshot.cs   # Snapshot do modelo de banco de dados
+├── Repositories/               # Implementações dos repositórios
+│   ├── CustomerRepository.cs   # Repositório de clientes
+│   ├── DispatchRepository.cs   # Repositório de despachos
+│   ├── OrderRepository.cs      # Repositório de pedidos
+│   └── Repository.cs           # Classe base para repositórios
+├── Settings/                   # Configurações do Entity Framework Core
+│   └── OrderSetting.cs         # Configuração da entidade Order
+├── Context.cs                  # Contexto do Entity Framework Core
+├── DependencyInjection.cs      # Configuração da injeção de dependências
+└── Frenet.Logistic.Infrastructure.csproj # Arquivo de projeto
+```
+
+<details>
+  <summary>Descrição das Funcionalidades</summary>
+  
+### Authentication
+
+Implementa toda a lógica de autenticação e autorização usando JWT (JSON Web Tokens):
+
+- **JwtProvider**: Gera tokens JWT para usuários autenticados
+- **Permission**: Define níveis de permissão como ReadMember, UpdateMember
+- **PermissionService**: Gerencia a verificação de permissões de usuários
+- **Authorization Handlers**: Configuram políticas de autorização baseadas em permissões
+
+### Clock
+
+Contém abstrações relacionadas a tempo e data:
+
+- **DateTimeProvider**: Implementação para fornecer data e hora do sistema
+
+### Constants
+
+Armazena constantes utilizadas pela aplicação:
+
+- **Tables**: Nomes das tabelas utilizadas no banco de dados
+
+### Data
+
+Contém componentes para acesso a dados:
+
+- **SqlConnectionFactory**: Cria conexões com o banco de dados SQL Server
+- **DateHandler**: Manipula conversões de datas para o Dapper
+
+### Migrations
+
+Migrações do Entity Framework Core para criar e atualizar o banco de dados:
+
+- **Initial**: Migração inicial que cria todas as tabelas do sistema
+  - Inclui setup para tabelas de Customer, Dispatch, Order, Role, Permission
+
+### Repositories
+
+Implementa os repositórios definidos na camada de domínio:
+
+- **Repository**: Base genérica para todos os repositórios
+- **CustomerRepository**: Operações específicas para clientes
+- **DispatchRepository**: Operações específicas para despachos
+- **OrderRepository**: Operações específicas para pedidos
+
+### Settings
+
+Contém configurações de mapeamento do Entity Framework Core:
+
+- **OrderSetting**: Configuração do mapeamento entidade-tabela para Order
+
+### Context.cs
+
+Contexto principal do Entity Framework Core que:
+
+- Implementa IUnitOfWork para garantir transações atômicas
+- Configura o mapeamento entre entidades e tabelas
+- Gerencia a publicação de eventos de domínio
+
+### DependencyInjection.cs
+
+Configura a injeção de dependências para todos os serviços da camada de infraestrutura:
+
+- Registra repositórios
+- Configura autenticação JWT
+- Configura acesso a dados
+- Registra serviços de sistema
+</details>
 
 </details>
