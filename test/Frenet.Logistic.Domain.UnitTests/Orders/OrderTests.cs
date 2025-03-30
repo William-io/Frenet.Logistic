@@ -42,7 +42,7 @@ public class OrderTests : BaseTesting
         var acessService = new ShippingPriceService(configurationMock.Object, loggerMock.Object);
         #endregion
 
-        //Act
+        //Act Testando a API externa.
         var details = await acessService.CalcularFrete(dispatch, localTo_LocalFrom);
 
         // Update the ProcessOrder method call to match the correct number of arguments
