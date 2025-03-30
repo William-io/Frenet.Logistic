@@ -210,3 +210,213 @@ Este padrão permite o tratamento de erros de forma elegante sem uso excessivo d
 
 Esta arquitetura garante uma separação clara de responsabilidades e facilita a manutenção e testabilidade do sistema.
 </details>
+
+# Frenet.Logistic.Domain
+
+A camada de domínio do projeto Frenet.Logistic implementa os conceitos centrais do negócio e contém as regras mais importantes da aplicação, seguindo os princípios da Arquitetura Limpa (Clean Architecture) e do Domain-Driven Design (DDD), Dominio Rico!
+
+```bash
+Frenet.Logistic.Domain/
+├── Abstractions/           # Classes e interfaces base
+│   ├── Entity.cs           # Classe base para entidades
+│   ├── Error.cs            # Representação de erros de domínio
+│   ├── IDomainEvent.cs     # Interface para eventos de domínio
+│   ├── IUnitOfWork.cs      # Abstração para transações atômicas
+│   └── Result.cs           # Padrão para encapsulamento de resultados
+├── Customers/              # Agregado de Cliente
+│   ├── Address.cs          # Objeto de valor para endereço
+│   ├── Customer.cs         # Entidade raiz do agregado
+│   ├── CustomerErrors.cs   # Erros específicos de cliente
+│   ├── Email.cs            # Objeto de valor para email
+│   ├── FirstName.cs        # Objeto de valor para nome
+│   ├── ICustomerRepository.cs  # Interface de repositório
+│   ├── LastName.cs         # Objeto de valor para sobrenome
+│   ├── Permission.cs       # Objeto de valor para permissões
+│   ├── Phone.cs            # Objeto de valor para telefone
+│   ├── Role.cs             # Entidade para função/papel
+│   └── RolePermission.cs   # Relação entre função e permissão
+├── Dispatchs/              # Agregado de Despacho
+│   ├── Dispatch.cs         # Entidade raiz do agregado
+│   ├── IDispatchRepository.cs  # Interface de repositório
+│   └── PackageParams.cs    # Objeto de valor para parâmetros do pacote
+├── Enums/                  # Enumerações do sistema
+│   └── Permission.cs       # Enumeração de permissões
+├── Orders/                 # Agregado de Pedido
+│   ├── IOrderRepository.cs # Interface de repositório
+│   ├── Order.cs            # Entidade raiz do agregado
+│   ├── OrderErrors.cs      # Erros específicos de pedido
+│   └── ShippingPriceService.cs  # Serviço de cálculo de frete
+└── Shared/                 # Componentes compartilhados
+    └── Enumeration.cs      # Implementação de Smart Enum
+```
+
+<details>
+  <summary>Componentes Principais</summary>
+
+## Abstrações Fundamentais
+
+### Entity
+A classe abstrata `Entity` serve como base para todas as entidades do domínio, fornecendo:
+- Identificação única através de um GUID
+- Sistema de eventos de domínio integrado
+- Métodos para adicionar, listar e limpar eventos
+
+### Error
+A classe `Error` representa erros de domínio de forma estruturada e consistente:
+- Código de erro para identificação única
+- Mensagem de erro descritiva
+- Métodos para comparação e erros comuns pré-definidos
+
+### Result Pattern
+O tipo `Result<T>` implementa o padrão de resultado para encapsular o resultado de operações de domínio:
+- Representa claramente sucesso ou falha
+- Carrega um valor em caso de sucesso
+- Carrega um erro estruturado em caso de falha
+- Evita o uso excessivo de exceções para controle de fluxo
+
+### Eventos de Domínio
+A interface `IDomainEvent` define a estrutura para eventos de domínio, que permitem:
+- Comunicação assíncrona entre agregados
+- Desacoplamento entre componentes do sistema
+- Extensibilidade para aspectos como auditoria e notificações
+
+## Agregados e Entidades
+
+### Customer (Cliente)
+O agregado `Customer` representa um cliente no sistema, contendo:
+- Informações pessoais (nome, sobrenome, email, telefone)
+- Endereço completo
+- Hash de senha para autenticação
+- Métodos para atualização de dados
+
+Objetos de valor associados:
+- **FirstName**: Validação e formatação do nome
+- **LastName**: Validação e formatação do sobrenome
+- **Email**: Validação de formato e unicidade
+- **Phone**: Validação e formatação de número telefônico
+- **Address**: Estrutura completa de endereço
+
+### Order (Pedido)
+O agregado `Order` representa um pedido de envio no sistema:
+- Referência ao cliente e ao despacho associados
+- Valor monetário do pedido
+- Status atual (processando, enviado, entregue, cancelado)
+- Datas de criação, envio e entrega
+- Métodos de transição de estado com validações de negócio
+
+O ciclo de vida de um pedido segue regras estritas:
+- Um pedido começa no status "Processando"
+- Pode ser confirmado, passando para "Enviado"
+- Pode ser completado, passando para "Entregue"
+- Pode ser cancelado, se ainda não estiver entregue
+- Transições inválidas resultam em erros de domínio
+
+### Dispatch (Despacho)
+O agregado `Dispatch` representa um despacho de pacote:
+- Parâmetros físicos do pacote (altura, largura, comprimento, peso)
+- Data do último despacho (opcional)
+- Métodos para atualização de parâmetros ou data
+
+## Objetos de Valor
+
+### PackageParams
+Encapsula os parâmetros físicos de um pacote:
+- Altura (em centímetros)
+- Largura (em centímetros)
+- Comprimento (em centímetros)
+- Peso (em quilogramas)
+- Validações para garantir valores positivos
+
+### Address
+Representa um endereço completo e válido:
+- Rua/logradouro
+- Cidade
+- Estado
+- CEP/Código postal
+- País
+- Validações para garantir campos não vazios
+
+## Serviços de Domínio
+
+### ShippingPriceService
+Serviço responsável pelo cálculo de preços de frete:
+- Integra-se com serviço externo para obter cotações
+- Recebe parâmetros do pacote e endereços de origem/destino
+- Retorna valor monetário do frete, com tratamento de erros
+- Uso da api externa: https://melhorenvio.com.br/
+
+## Interfaces de Repositório
+Cada agregado define sua própria interface de repositório:
+
+### ICustomerRepository
+- Busca por ID ou email
+- Adiciona novos clientes
+- Atualiza clientes existentes
+
+### IOrderRepository
+- Busca por ID
+- Lista pedidos por cliente
+- Adiciona e atualiza pedidos
+
+### IDispatchRepository
+- Busca por ID
+- Lista todos os despachos disponíveis
+- Adiciona e atualiza despachos
+
+## Smart Enum
+O padrão Smart Enum é implementado para enumerações ricas:
+- Permite valores enumerados com comportamento e propriedades adicionais
+- Suporta busca por ID ou nome
+- Facilita a listagem de todos os valores possíveis
+
+## Classes de Erro
+O domínio define erros específicos para cada contexto:
+
+### OrderErrors
+- **NotFound**: Pedido não encontrado
+- **NotProcessing**: Pedido não está em processamento
+- **NotShipped**: Pedido não foi enviado
+- **AlreadyDelivered**: Pedido já foi entregue
+- **AlreadyCancelled**: Pedido já foi cancelado
+- **Cancelled**: Pedido foi cancelado
+
+### CustomerErrors
+- **NotFound**: Cliente não encontrado
+- **DuplicateEmail**: Email já cadastrado
+- **InvalidCredentials**: Credenciais inválidas
+
+## Princípios e Padrões Aplicados
+A camada de domínio implementa diversos princípios e padrões:
+- **Entidades Ricas**: Encapsulam comportamento e regras, não apenas dados
+- **Objetos de Valor Imutáveis**: Representam conceitos sem identidade própria
+- **Agregados**: Definem limites de consistência transacional
+- **Factory Methods**: Encapsulam a criação de entidades complexas
+- **Especificações**: Encapsulam regras de validação ou seleção
+- **Result Pattern**: Tratamento explícito de erros sem exceções
+- **Eventos de Domínio**: Comunicação desacoplada entre agregados
+
+# Fluxos de Negócio Principais
+
+## Processamento de Pedido
+1. Cliente solicita um envio
+2. Sistema calcula preço de frete usando o serviço de preços
+3. Cria um novo pedido no estado "Processing"
+4. Emite evento de domínio para notificação
+
+## Confirmação de Pedido
+1. Pedido é confirmado e passa para o estado "Shipped"
+2. A data de envio é registrada
+3. Evento de domínio sinaliza a mudança de status
+
+## Entrega de Pedido
+1. Pedido é marcado como entregue ("Delivered")
+2. A data de entrega é registrada
+3. Evento de domínio registra a conclusão do pedido
+
+## Cancelamento de Pedido
+1. Pedido é cancelado (se ainda não entregue)
+2. Status muda para "Cancelled"
+3. Evento de domínio notifica sobre o cancelamento
+
+
+</details>
