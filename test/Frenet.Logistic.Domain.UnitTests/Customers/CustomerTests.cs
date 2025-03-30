@@ -1,10 +1,12 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
 using Frenet.Logistic.Domain.Customers;
 using Frenet.Logistic.Domain.Customers.Events;
+using Frenet.Logistic.Domain.UnitTests.Bases;
 
 namespace Frenet.Logistic.Domain.UnitTests.Customers;
 
-public class CustomerTests
+public class CustomerTests : BaseTesting
 {
     [Fact]
     public void Criar_deve_definir_valor_de_propriedade()
@@ -29,17 +31,18 @@ public class CustomerTests
             SeedTest.FirstName, SeedTest.LastName, SeedTest.Email, SeedTest.Phone, SeedTest.Address);
 
         var eventos = customer.GetDomainEvents();
-        System.Diagnostics.Debug.WriteLine($"Total de eventos: {eventos.Count}");
+        Debug.WriteLine($"Total de eventos: {eventos.Count}");
 
-        foreach (var evt in eventos)
-        {
-            System.Diagnostics.Debug.WriteLine($"Evento: {evt.GetType().Name}");
-        }
-
-        var domainEvent = eventos.OfType<CustomerCreatedDomainEvent>().SingleOrDefault();
-        System.Diagnostics.Debug.WriteLine($"ID do Cliente no Evento: {domainEvent?.CustomerId}");
-        System.Diagnostics.Debug.WriteLine($"ID do Cliente na Entidade: {customer.Id}");
+        var domainEvent = AfirmarQueEventoDominioFoiExecutado<CustomerCreatedDomainEvent>(customer);
 
         domainEvent.CustomerId.Should().Be(customer.Id);
+    }
+
+    [Fact]
+    public void Criar_Deve_Adicionar_Role_Registered_Passando_CustomerID_RoleID_Na_Tabela_CustomerRole()
+    {
+        var customer = Customer.Create(SeedTest.FirstName, SeedTest.LastName, SeedTest.Email, SeedTest.Phone, SeedTest.Address);
+
+        customer.Roles.Should().Contain(Role.Registered); 
     }
 }
