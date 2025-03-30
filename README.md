@@ -84,6 +84,105 @@ há inseridas as permissões em seu Token: [ReadMember] / [UpdateMember]
 > https://jwt.io/
 
 <details>
+  <summary>Especificaçoes do banco</summary>
+  
+## 1. Configuração Inicial do Banco de Dados
+
+Para atualizar o banco de dados utilizando as migrations existentes, execute os seguintes comandos:
+
+```bash
+# Navegar até o diretório do projeto
+cd seu-projeto
+
+# Executar as migrations existentes
+dotnet ef database update
+```
+
+## 2. Estrutura do Banco de Dados
+
+O sistema utiliza as seguintes tabelas:
+
+### Customers (Clientes)
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| id | uniqueidentifier | Primary Key |
+| first_name | nvarchar(200) | Not Null |
+| last_name | nvarchar(200) | Not Null |
+| email | nvarchar(450) | Not Null |
+| address_country | nvarchar(max) | Not Null |
+| address_state | nvarchar(max) | Not Null |
+| address_zip_code | nvarchar(max) | Not Null |
+| address_city | nvarchar(max) | Not Null |
+| address_street | nvarchar(max) | Not Null |
+| phone | nvarchar(15) | Not Null |
+
+### Dispatchs (Despachos) 
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| id | uniqueidentifier | Primary Key |
+| last_dispatch_on_utc | datetime2 | Nullable |
+| package_weight | float | Not Null |
+| package_height | int | Not Null |
+| package_width | int | Not Null |
+| package_length | int | Not Null |
+
+```html
+O Banco Dispatchs é responsável por armazenar os dados de medidas e peso, que são parâmetros essenciais para a API que calcula o frete.
+```
+
+### Orders (Pedidos)
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| id | uniqueidentifier | Primary Key |
+| dispatch_id | uniqueidentifier | Foreign Key |
+| customer_id | uniqueidentifier | Foreign Key |
+| zip_code_from | nvarchar(max) | Not Null |
+| zip_code_to | nvarchar(max) | Not Null |
+| created_on_utc | datetime2 | Not Null |
+| processing_on_utc | datetime2 | Not Null |
+| shipped_on_utc | datetime2 | Not Null |
+| delivered_on_utc | datetime2 | Not Null |
+| cancelled_on_utc | datetime2 | Not Null |
+| status | int | Not Null |
+| shipping_name | nvarchar(100) | Nullable |
+| shipping_price | nvarchar(100) | Nullable |
+
+### Permissions (Permissões)
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| id | int | Primary Key, Identity |
+| name | nvarchar(max) | Not Null |
+
+### Roles (Funções)
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| id | int | Primary Key, Identity |
+| name | nvarchar(max) | Not Null |
+
+### Tabelas de Relacionamento
+
+#### customer_role
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| customers_id | uniqueidentifier | Primary Key, Foreign Key |
+| roles_id | int | Primary Key, Foreign Key |
+
+#### role_permission
+| Campo | Tipo | Restrições |
+|-------|------|------------|
+| role_id | int | Primary Key, Foreign Key |
+| permission_id | int | Primary Key, Foreign Key |
+
+### Relações entre Tabelas
+
+- **Orders → Customers**: Cada pedido está vinculado a um cliente
+- **Orders → Dispatchs**: Cada pedido está vinculado a um despacho
+- **customer_role**: Relacionamento N:N entre Customers e Roles
+- **role_permission**: Relacionamento N:N entre Roles e Permissions
+
+</details>
+
+<details>
   <summary>Especificações das Camadas da Aplicação</summary>
 
 # Frenet.Logistic.Api
