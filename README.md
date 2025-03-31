@@ -84,6 +84,92 @@ há inseridas as permissões em seu Token: [ReadMember] / [UpdateMember]
 > https://jwt.io/
 
 <details>
+  <summary>Informação sobre o endpoint dispatchs</summary>
+
+
+# Documentação do Endpoint Dispatchs
+
+## Visão Geral
+O endpoint Dispatchs fornece acesso aos dados de despachos disponíveis no sistema. Estes despachos contêm parâmetros físicos de pacotes que são utilizados para o cálculo de frete via API externa (MelhorEnvio) durante o processamento de pedidos.
+
+## Endpoints Disponíveis
+
+### 1. Listar Todos os Despachos
+
+**GET** `/api/v1/Dispatchs`
+
+Este endpoint retorna uma lista de todos os despachos cadastrados no sistema, incluindo suas dimensões e peso.
+
+**Resposta de Sucesso (200 OK):**
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "weight": 4.723,
+    "height": 20,
+    "width": 79,
+    "length": 1
+  },
+  // ...outros despachos
+]
+```
+
+### 2. Buscar Despacho por ID
+
+**GET** `/api/v1/Dispatchs/{id}`
+
+Este endpoint retorna os detalhes de um despacho específico pelo seu ID.
+
+**Resposta de Sucesso (200 OK):**
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "package": {
+      "weight": 4.723,
+      "height": 20,
+      "width": 79,
+      "length": 1
+    }
+  }
+]
+```
+
+## Dados de Exemplo
+O sistema utiliza a biblioteca Bogus para gerar automaticamente dados de despacho realistas que são carregados no banco de dados quando a aplicação é iniciada. Esta funcionalidade é implementada na classe `Seeding.cs`.
+
+**Características dos Dados Gerados:**
+- **Quantidade:** 10 despachos são gerados automaticamente
+- **Dimensões:**
+  - Altura: entre 1 e 105 cm
+  - Largura: entre 1 e 105 cm
+  - Comprimento: entre 1 e 105 cm
+  - Soma das dimensões: limitada a 200 cm (restrição comum de transportadoras)
+- **Peso:** entre 0.1 e 30.0 kg
+- **Data de último despacho:** gerada aleatoriamente no último ano
+
+## Uso no Cálculo de Frete
+Os dados de despachos são utilizados pelo `ShippingPriceService` para calcular o preço do frete no momento da criação de um pedido. O serviço:
+
+1. Recebe um objeto Dispatch selecionado pelo usuário
+2. Obtém os CEPs de origem e destino (objeto ZipCode)
+3. Realiza uma chamada à API externa MelhorEnvio para calcular o frete
+4. Retorna detalhes do frete como o custo e o nome do serviço
+
+Este processo ocorre automaticamente durante o fluxo de criação de pedidos, onde o preço do frete é calculado e associado ao pedido antes de sua finalização.
+
+## Notas Importantes
+- Os dados de despacho são essenciais para o cálculo preciso do frete
+- A população automática do banco garante que o sistema sempre tenha opções de despacho disponíveis
+- Para ambientes de produção, recomenda-se revisar e possivelmente ajustar os dados gerados automaticamente
+
+---
+
+  
+</details>
+
+
+<details>
   <summary>Especificaçoes do banco</summary>
   
 ## 1. Configuração Inicial do Banco de Dados
