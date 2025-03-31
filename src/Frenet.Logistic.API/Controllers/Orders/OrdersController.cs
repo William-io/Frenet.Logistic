@@ -7,6 +7,7 @@ using Frenet.Logistic.Application.Orders.GetAllOrder;
 using Frenet.Logistic.Application.Orders.GetOrder;
 using Frenet.Logistic.Application.Orders.ProcessOrder;
 using Frenet.Logistic.Domain.Abstractions;
+using Frenet.Logistic.Infrastructure.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +35,7 @@ public class OrdersController : ControllerBase
 
         return result.IsSuccess ? Ok(result.Value) : NotFound();
     }
-    
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOrder(Guid id, CancellationToken cancellationToken)
@@ -56,45 +57,16 @@ public class OrdersController : ControllerBase
 
         Result<Guid> result = await _sender.Send(command, cancellationToken);
 
-        if (result.IsFailure)      
+        if (result.IsFailure)
             return BadRequest(result.Error);
-        
+
         return Ok(result.Value);
     }
 
-    [HttpPut("confirm")]
-    public async Task<IActionResult> ConfirmOrder(
-        ConfirmOrderRequest request, CancellationToken cancellationToken)
+    [HttpPut("confirm/{id}")]
+    public async Task<IActionResult> ConfirmOrder(Guid id, CancellationToken cancellationToken)
     {
-        var command = new ConfirmOrderCommand(request.OrderId);
-
-        Result result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)       
-            return BadRequest(result.Error);    
-
-        return Ok(result);
-    }
-
-    [HttpPut("complete")]
-    public async Task<IActionResult> CompleteOrder(
-        CompleteOrderRequest request, CancellationToken cancellationToken)
-    {
-        var command = new CompleteOrderCommand(request.OrderId);
-
-        Result result = await _sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)      
-            return BadRequest(result.Error);
-        
-        return Ok(result);
-    }
-
-    [HttpPut("cancel")]
-    public async Task<IActionResult> CancelOrder(
-        CancelOrderRequest request, CancellationToken cancellationToken)
-    {
-        var command = new CancelOrderCommand(request.OrderId);
+        var command = new ConfirmOrderCommand(id);
 
         Result result = await _sender.Send(command, cancellationToken);
 
@@ -104,6 +76,33 @@ public class OrdersController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("complete/{id}")]
+    public async Task<IActionResult> CompleteOrder(Guid id, CancellationToken cancellationToken)
+    {
+        var command = new CompleteOrderCommand(id);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
+    }
+
+    [HttpPut("cancel/{id}")]
+    public async Task<IActionResult> CancelOrder(Guid id, CancellationToken cancellationToken)
+    {
+        var command = new CancelOrderCommand(id);
+
+        Result result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+            return BadRequest(result.Error);
+
+        return Ok(result);
+    }
+
+    [HasPermission(Permission.ReadMember)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteOrder(Guid id, CancellationToken cancellationToken)
     {

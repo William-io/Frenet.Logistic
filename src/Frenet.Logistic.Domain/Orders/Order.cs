@@ -111,7 +111,7 @@ public sealed class Order : Entity
     
     public Result Cancel(DateTime utcNow)
     {
-        if (Status != OrderStatus.Delivered)
+        if (Status == OrderStatus.Delivered)
             return Result.Failure(OrderErrors.NotProcessing);
         
         var currentDate = DateOnly.FromDateTime(utcNow);
