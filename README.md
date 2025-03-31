@@ -84,6 +84,155 @@ há inseridas as permissões em seu Token: [ReadMember] / [UpdateMember]
 > https://jwt.io/
 
 <details>
+  <summary>Informações sobre endpoint Order</summary>
+
+# Documentação dos Endpoints de Orders (Pedidos)
+
+## Visão Geral
+O endpoint Orders fornece operações completas de gerenciamento de pedidos no sistema Frenet.Logistic, permitindo criar, visualizar, atualizar status e excluir pedidos. Estes endpoints seguem o ciclo de vida de um pedido desde o processamento inicial até a entrega ou cancelamento.
+
+## Endpoints Disponíveis
+
+### 1. Listar Todos os Pedidos
+**GET** `/api/v1/Orders`
+
+Este endpoint retorna uma lista de todos os pedidos cadastrados no sistema.
+
+**Resposta de Sucesso (200 OK):**
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "dispatchId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "customerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "status": "Processing",
+    "createdOn": "2023-05-18T10:30:00Z",
+    "shippingName": "PAC",
+    "shippingPrice": "15.90"
+  },
+  // ...outros pedidos
+]
+```
+
+### 2. Buscar Pedido por ID
+**GET** `/api/v1/Orders/{id}`
+
+Este endpoint retorna os detalhes de um pedido específico pelo seu ID.
+
+**Resposta de Sucesso (200 OK):**
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "dispatchId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "customerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "zipCodeFrom": "04001-000",
+  "zipCodeTo": "01310-200",
+  "createdOnUtc": "2023-05-18T10:30:00Z",
+  "status": "Processing",
+  "shippingName": "PAC",
+  "shippingPrice": "15.90"
+}
+```
+
+### 3. Processar Pedido
+**POST** `/api/v1/Orders/process`
+
+Este endpoint cria um novo pedido no sistema, iniciando seu ciclo de vida no status "Processing".
+
+**Corpo da Requisição:**
+```json
+{
+  "dispatchId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "customerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+**Resposta de Sucesso (200 OK):**
+```json
+"3fa85f64-5717-4562-b3fc-2c963f66afa6"  // ID do pedido criado
+```
+
+### 4. Confirmar Pedido
+**PUT** `/api/v1/Orders/confirm/{id}`
+
+Este endpoint atualiza o status de um pedido para "Shipped" (Enviado).
+
+**Resposta de Sucesso (200 OK):**
+```json
+{
+  "isSuccess": true
+}
+```
+
+### 5. Completar Pedido
+**PUT** `/api/v1/Orders/complete/{id}`
+
+Este endpoint atualiza o status de um pedido para "Delivered" (Entregue).
+
+**Resposta de Sucesso (200 OK):**
+```json
+{
+  "isSuccess": true
+}
+```
+
+### 6. Cancelar Pedido
+**PUT** `/api/v1/Orders/cancel/{id}`
+
+Este endpoint atualiza o status de um pedido para "Cancelled" (Cancelado).
+
+**Resposta de Sucesso (200 OK):**
+```json
+{
+  "isSuccess": true
+}
+```
+
+### 7. Excluir Pedido
+**DELETE** `/api/v1/Orders/{id}`
+
+Este endpoint exclui um pedido do sistema. Requer a permissão ReadMember.
+
+**Resposta de Sucesso (200 OK):**
+```json
+{
+  "isSuccess": true
+}
+```
+
+## Ciclo de Vida de um Pedido
+Os pedidos no sistema Frenet.Logistic seguem um ciclo de vida específico:
+
+1. **Processing**: Estado inicial após a criação do pedido
+2. **Shipped**: Pedido confirmado e enviado
+3. **Delivered**: Pedido entregue ao destinatário
+4. **Cancelled**: Pedido cancelado
+
+As transições de estado seguem regras estritas:
+- Um pedido só pode ser confirmado se estiver no estado "Processing"
+- Um pedido só pode ser completado se estiver no estado "Shipped"
+- Um pedido pode ser cancelado se ainda não estiver no estado "Delivered"
+
+## Autenticação e Autorização
+- A maioria dos endpoints está disponível para usuários autenticados
+- A exclusão de pedidos requer a permissão específica ReadMember
+- Para fazer requisições autenticadas, inclua o token JWT no header como: `Bearer <seu_token_jwt>`
+
+## Integração com Outros Componentes
+- Os pedidos estão associados a despachos (Dispatch) e clientes (Customer)
+- O cálculo de preço de frete é realizado automaticamente através do ShippingPriceService
+- As datas relevantes (criação, envio, entrega, cancelamento) são registradas automaticamente em cada transição de estado
+
+## Possíveis Códigos de Erro
+| Código | Descrição |
+|--------|-----------|
+| 400 | Bad Request: Dados inválidos ou transição de estado não permitida |
+| 404 | Not Found: Pedido não encontrado |
+| 401 | Unauthorized: Token de autenticação ausente ou inválido |
+
+</details>
+
+<details>
   <summary>Informação sobre o endpoint dispatchs</summary>
 
 
