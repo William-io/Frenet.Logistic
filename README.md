@@ -1,3 +1,10 @@
+## Visão Geral
+
+Principais tecnologias e bibliotecas utilizadas:
+
+- **.NET 8** / **MediatR** / **Entity Framework/Dapper** / **SQL Server**
+- **Swagger/OpenAPI** / **JWT (Bearer)** / **Bogus** / **DDD** / **Fluent Validation** / 
+- **API Externa: MelhorEnvio**
 # Guia de Execução do Projeto
 
 ## 1. Configuração Inicial do Banco de Dados
